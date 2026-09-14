@@ -13,7 +13,7 @@ from futures_quant.contracts.definitions import (
 
 def test_all_expected_instruments_load():
     instruments = load_instruments("configs/instruments.yaml")
-    assert set(instruments.keys()) == {"MES", "ES", "MGC", "GC", "MCL", "CL"}
+    assert set(instruments.keys()) == {"MES", "ES", "MGC", "GC", "MCL", "CL", "MBT"}
 
 
 def test_execution_instruments_match_micro_contracts():

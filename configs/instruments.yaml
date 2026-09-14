@@ -114,3 +114,22 @@ instruments:
       fallback_days_before_expiry: 3
     deliverable: true
     delivery_safety_buffer_days: 10
+
+  MBT:
+    description: CME Micro Bitcoin Futures (added for H017's crypto extension -- cash-settled, not previously an executable instrument, only used as a signal source in H012/H013)
+    root: MBT
+    exchange: CME
+    currency: USD
+    multiplier: 0.1     # 0.1 BTC per contract, cash-settled
+    tick_size: 5.0
+    tick_value: 0.5
+    monthly: true        # CME lists near monthly expiries, not a fixed quarterly cycle
+    # no traditional RTH for a near-24h cash-settled crypto future -- same window
+    # used for both fields, distinct from the equity/commodity instruments above
+    rth_session: {start: "18:00", end: "17:00", tz: America/New_York}
+    globex_session: {start: "18:00", end: "17:00", tz: America/New_York}
+    maintenance_break: {start: "17:00", end: "18:00", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 5
+    deliverable: false

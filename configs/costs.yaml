@@ -13,6 +13,7 @@ commission_per_contract:
   GC: 2.05
   MCL: 0.47
   CL: 2.05
+  MBT: 0.50   # unverified placeholder, same order of magnitude as other micro contracts -- see note at top of file
 
 exchange_and_regulatory_fees_per_contract:
   MES: 0.35
@@ -21,6 +22,7 @@ exchange_and_regulatory_fees_per_contract:
   GC: 1.60
   MCL: 0.35
   CL: 1.60
+  MBT: 0.35   # unverified placeholder, same order of magnitude as other micro contracts -- see note at top of file
 
 scenarios:
   base:
