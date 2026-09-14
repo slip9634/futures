@@ -1,0 +1,115 @@
+{
+  "experiment_id": "H014_INVERSE_MES_MGC_MCL_20260914",
+  "strategy_id": "CROSS_ASSET_LEAD_LAG_v1",
+  "description": "Pre-registered follow-up to H011: H011 found BOTH MES->MCL and MGC->MCL (same-direction) negative with similar sign/magnitude (t=-1.88, -1.90) and explicitly flagged, but did not test, the inverse (LONG MCL when MES/MGC down, SHORT when up) as a candidate for a future hypothesis. This is that follow-up, decided from H011's own sign before this test was run -- not a post-hoc re-fit.",
+  "diagnostic_note": "Per H013's lesson, long/short P&L is decomposed and compared against target buy-and-hold for each pair, since a market-neutral-LOOKING lead-lag signal can still be a beta bet in disguise if its long/short trade counts are imbalanced during a trending window.",
+  "captured_at_utc": "2026-09-14T09:32:56.439395Z",
+  "results": [
+    {
+      "leader": "MES",
+      "target": "MCL",
+      "invert": true,
+      "target_buy_and_hold_net_pnl": 3046.36,
+      "results_by_scenario": [
+        {
+          "leader": "MES",
+          "target": "MCL",
+          "cost_scenario": "base",
+          "n_trades": 241,
+          "gross_pnl": 1214.0,
+          "net_pnl": 818.76,
+          "win_rate": 0.3942,
+          "avg_trade_net": 3.4,
+          "naive_t_stat": 0.5973,
+          "n_long": 112,
+          "n_short": 129,
+          "long_net_pnl": 2352.32,
+          "short_net_pnl": -1533.56
+        },
+        {
+          "leader": "MES",
+          "target": "MCL",
+          "cost_scenario": "conservative",
+          "n_trades": 241,
+          "gross_pnl": 852.5,
+          "net_pnl": 457.26,
+          "win_rate": 0.3817,
+          "avg_trade_net": 1.9,
+          "naive_t_stat": 0.3336,
+          "n_long": 112,
+          "n_short": 129,
+          "long_net_pnl": 2184.32,
+          "short_net_pnl": -1727.06
+        },
+        {
+          "leader": "MES",
+          "target": "MCL",
+          "cost_scenario": "stress",
+          "n_trades": 241,
+          "gross_pnl": 250.0,
+          "net_pnl": -145.24,
+          "win_rate": 0.3734,
+          "avg_trade_net": -0.6,
+          "naive_t_stat": -0.106,
+          "n_long": 112,
+          "n_short": 129,
+          "long_net_pnl": 1904.32,
+          "short_net_pnl": -2049.56
+        }
+      ]
+    },
+    {
+      "leader": "MGC",
+      "target": "MCL",
+      "invert": true,
+      "target_buy_and_hold_net_pnl": 3046.36,
+      "results_by_scenario": [
+        {
+          "leader": "MGC",
+          "target": "MCL",
+          "cost_scenario": "base",
+          "n_trades": 442,
+          "gross_pnl": 125.0,
+          "net_pnl": -599.88,
+          "win_rate": 0.2036,
+          "avg_trade_net": -1.36,
+          "naive_t_stat": -0.4343,
+          "n_long": 200,
+          "n_short": 242,
+          "long_net_pnl": 1614.0,
+          "short_net_pnl": -2213.88
+        },
+        {
+          "leader": "MGC",
+          "target": "MCL",
+          "cost_scenario": "conservative",
+          "n_trades": 442,
+          "gross_pnl": -538.0,
+          "net_pnl": -1262.88,
+          "win_rate": 0.1946,
+          "avg_trade_net": -2.86,
+          "naive_t_stat": -0.9143,
+          "n_long": 200,
+          "n_short": 242,
+          "long_net_pnl": 1314.0,
+          "short_net_pnl": -2576.88
+        },
+        {
+          "leader": "MGC",
+          "target": "MCL",
+          "cost_scenario": "stress",
+          "n_trades": 442,
+          "gross_pnl": -1643.0,
+          "net_pnl": -2367.88,
+          "win_rate": 0.1923,
+          "avg_trade_net": -5.36,
+          "naive_t_stat": -1.7143,
+          "n_long": 200,
+          "n_short": 242,
+          "long_net_pnl": 814.0,
+          "short_net_pnl": -3181.88
+        }
+      ]
+    }
+  ]
+}

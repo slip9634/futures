@@ -6,6 +6,11 @@ venv/
 .env
 *.duckdb
 *.sqlite
+# database/quant_lab.db is a derived index rebuilt from the tracked CSVs/
+# JSON reports by scripts/build_research_database.py (run it each session
+# after cloning) - see that script's own docstring for why it isn't the
+# source of truth and isn't committed.
+database/*.db
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/

@@ -224,3 +224,74 @@ ruff check src tests
 
 Following section 73 of the mandate: Phase 1 (environment/repo/safety) is
 substantially complete; Phase 2 (data) is next.
+
+## Reconciling with the "Autonomous Quant Research Lab" mandate (2026-09-14)
+
+A second, broader mandate document (`Claude Code — Autonomous Quant
+Research Lab`, structured around a Grok discovery/scouting handoff and a
+much wider asset universe: equities, ETFs, futures, FX, bonds,
+commodities, crypto spot/perps/options, equity/index options) was
+supplied this session, layered on top of the IBKR-futures-specific
+mandate this repository was originally built against. Nothing about the
+original mandate's safety architecture, PAPER-only rule, or existing
+research is superseded -- this section records what carries over and
+what doesn't:
+
+- **No Grok integration exists.** This session has not received, and has
+  no mechanism to receive, any hypothesis package from an external
+  "Grok" discovery system. Every hypothesis in this project (H001-H014)
+  originated from the user directly or from this lab's own construction,
+  not from Grok. The `SOURCES`/`HYPOTHESES`/`EXPERIMENTS` record-keeping
+  the new mandate asks for has been built (see below) so that a future
+  Grok handoff, if wired up, has somewhere real to land -- but none has
+  happened yet.
+- **No Bybit or Deribit connector is available in this environment** (only
+  `Interactive_Brokers_IBKR` is connected) -- crypto perpetuals, crypto
+  options, and dedicated crypto-derivatives research the new mandate asks
+  for are not currently executable here at all, beyond the CME
+  micro-Bitcoin futures (MBT) research already done (H012/H013, both
+  rejected/downgraded).
+- **A real, previously-undocumented finding this session:** the IBKR MCP
+  connector's `get_price_history` tool accepts `security_type` values
+  beyond `FUT` -- `STK`, `CASH` (FX), `BOND`, `CRYPTO`, `CMDTY`, `OPT`,
+  `IND` are all listed. This project has only ever pulled `FUT` data
+  (MES/MGC/MCL/MBT). Broader cross-asset research the new mandate calls
+  for (equities, FX, bonds, crypto spot) may be reachable through this
+  same connector without any new integration work -- this has not been
+  tested yet (same ~1000-bar-per-call, no-pagination ceiling documented
+  in `data/metadata/depth_assessment.json` should be assumed until
+  checked per security type). Logged as the top item in
+  `reports/leaderboard.md`'s Next Research Priorities, not yet executed.
+- **The persistent research database** the new mandate asks for
+  (SOURCES/HYPOTHESES/EXPERIMENTS/STRATEGIES/BACKTESTS/
+  ROBUSTNESS_TESTS/PORTFOLIOS/REJECTED_STRATEGIES) now exists as SQLite,
+  built by `scripts/build_research_database.py`, which migrates the
+  existing `research/hypothesis_ledger/hypothesis_ledger.csv`,
+  `research/literature/paper_database.csv`, and `reports/backtests/*.json`
+  into queryable tables. The CSVs/JSON remain the git-tracked source of
+  truth (same ephemeral-container rationale as the shadow ledger above);
+  `database/quant_lab.db` is a derived, regenerable index and is
+  deliberately NOT committed (`.gitignore`) -- run the build script after
+  cloning:
+  ```bash
+  uv run python scripts/build_research_database.py
+  ```
+- **`reports/leaderboard.md`** is the new mandate's requested Main
+  Leaderboard / Discovery Table / Rejected Strategies / Top Picks report,
+  covering every hypothesis tested so far (H001-H014). Current honest
+  state: **NONE CURRENTLY QUALIFY** for any Top Pick category except
+  "Most Interesting New Discovery" (the MCL intraday-return leg from H009,
+  still PROVISIONAL, not ROBUST). Everything else in the ledger is
+  REJECTED -- expected at this early a stage, not a sign anything is
+  broken.
+- **This session's own contribution beyond reconciling the two mandates**:
+  H014, a pre-registered follow-up closing out a "candidate for a future
+  hypothesis" H011 had explicitly flagged but not tested (an inverse
+  MES/MGC->MCL lead-lag relationship). Result: REJECTED -- see
+  `research/hypothesis_ledger/hypothesis_ledger.csv` and
+  `reports/backtests/H014_INVERSE_MES_MGC_MCL.json`.
+- The new mandate's much wider "Objective" targets (CAGR/Sharpe/drawdown
+  thresholds, leverage lab, volatility targeting, portfolio construction
+  across many strategies) remain aspirational until more than one
+  hypothesis clears ROBUST status -- currently zero have. Nothing in this
+  session inflates that count to look more complete than it is.
