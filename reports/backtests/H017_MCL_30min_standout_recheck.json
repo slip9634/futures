@@ -1,0 +1,31 @@
+{
+  "purpose": "Follow-up robustness check on the single standout cell from H017's 54-cell sweep (MCL, 30min, fast=10/slow=30, threshold=0.5%) -- full cost scenarios, long/short decomposition, neighboring-parameter stability, and a HAC significance re-check, before deciding whether it merits any elevated confidence.",
+  "cell": {"root": "MCL", "timeframe": "30min", "fast_window": 10, "slow_window": 30, "threshold_pct": 0.005},
+  "cost_scenarios": {
+    "base": {"n_trades": 20, "net_pnl": 4075.20, "win_rate": 0.600, "naive_t_stat": 2.1126},
+    "conservative": {"n_trades": 20, "net_pnl": 4045.20, "win_rate": 0.600, "naive_t_stat": 2.0971},
+    "stress": {"n_trades": 20, "net_pnl": 3995.20, "win_rate": 0.600, "naive_t_stat": 2.0712}
+  },
+  "long_short_decomposition_base_scenario": {
+    "long": {"n_trades": 10, "net_pnl": 2758.60},
+    "short": {"n_trades": 10, "net_pnl": 1316.60},
+    "note": "reasonably balanced -- not a one-sided beta-driven result like H012's original MBT->MCL finding"
+  },
+  "neighboring_parameter_stability_30min_threshold_0.5pct": {
+    "fast5_slow20": {"naive_t_stat": 1.3985, "net_pnl": 2510.44},
+    "fast10_slow30": {"naive_t_stat": 2.1126, "net_pnl": 4075.20},
+    "fast20_slow50": {"naive_t_stat": 0.7783, "net_pnl": 1765.68},
+    "note": "all 3 neighboring pairs are POSITIVE and form a smooth hump peaking at 10/30 -- NOT an isolated spike (H002's own reject criterion for a parameter optimum)"
+  },
+  "hac_recheck_base_scenario": {
+    "n": 20, "mean_net_pnl": 203.76, "naive_t_stat": 2.1126,
+    "newey_west_rule_of_thumb_lag": 2,
+    "hac_t_stat_by_lag": {"1": 3.0068, "2": 3.3554, "5": 3.4269, "10": 3.7818}
+  },
+  "multiple_comparisons_caveat": {
+    "cells_searched": 54,
+    "reasoning": "This cell is the BEST of 54 tested (3 instruments x 3 timeframes x 3 MA pairs x 2 thresholds). A naive |t|>1.96 threshold is calibrated for a SINGLE pre-registered test, not the winner of a 54-way search. A simple Bonferroni correction (alpha=0.05/54) requires roughly |t|>3.3-3.5 to be trustworthy. The naive t=2.11 does NOT clear that bar. Some HAC-adjusted lags (3.36, 3.43, 3.78) marginally do, but HAC estimation on n=20 (below this project's 100-trade floor) is itself less reliable at small n (same caution already flagged in H015's MES 20d/non-overlapping cell), so leaning on the HAC number alone to clear the corrected bar would be cherry-picking the favorable cut."
+  },
+  "conclusion": "PROMISING LEAD, NOT a confirmed finding. Genuinely reassuring signs (cost-scenario stability, balanced long/short, smooth neighboring-parameter response) distinguish this from a pure overfit artifact, but the multiple-comparisons correction this result needs (as the winner of a 54-cell search) is not clearly cleared. Needs true out-of-sample confirmation on a held-out period, which this IBKR connector cannot currently provide for MCL at 30min resolution (capped at ~66 RTH days total, already fully used). Recorded as provisional, lower confidence than H009's MCL intraday leg (a single pre-registered test, not a search winner).",
+  "recorded_at_utc": "2026-09-14"
+}

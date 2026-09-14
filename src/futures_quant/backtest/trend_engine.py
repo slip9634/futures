@@ -110,20 +110,24 @@ def _entry_exit_sides(direction: Direction) -> tuple[Side, Side]:
     return Side.SELL, Side.BUY
 
 
-def run_trend_backtest(
-    bars: list[OHLCVBar],
+def build_trades_from_direction_points(
+    sorted_bars: list[OHLCVBar],
+    points: list,  # any object with .bar_index, .timestamp, .direction (LONG/SHORT only)
     *,
     root: str,
-    bar_size: str,
     instrument: InstrumentSpec,
     costs_config: CostsConfig,
     scenario: str,
-    fast_window: int,
-    slow_window: int,
     quantity: int = 1,
-) -> TrendBacktestResult:
-    sorted_bars = sorted(bars, key=lambda b: b.timestamp)
-    points = generate_crossover_signal_series(sorted_bars, fast_window, slow_window)
+) -> list[TrendTrade]:
+    """Shared always-in-market, stop-and-reverse trade-construction walk:
+    any strategy that reduces to "a sequence of desired LONG/SHORT
+    direction points, one entry/exit per direction CHANGE, executed at
+    the next bar's open, position unwound at the window end" can reuse
+    this instead of re-implementing the same fill/costs/close-out logic.
+    `points` must never contain Direction.FLAT -- a strategy with a
+    genuine flat state needs its own walk (see
+    macd_swing_breakout_engine.py for that variant)."""
     trade_costs = compute_round_trip_costs(root, costs_config, quantity)
     scenario_cfg = costs_config.scenarios[scenario]
     half_spread = scenario_cfg.spread_ticks / 2 * instrument.tick_size
@@ -189,6 +193,27 @@ def run_trend_backtest(
         exit_fill = make_fill(exit_side, last_bar.close, last_bar.timestamp)
         trades.append(close_trade(current_direction, entry_fill, exit_fill, at_window_end=True))
 
+    return trades
+
+
+def run_trend_backtest(
+    bars: list[OHLCVBar],
+    *,
+    root: str,
+    bar_size: str,
+    instrument: InstrumentSpec,
+    costs_config: CostsConfig,
+    scenario: str,
+    fast_window: int,
+    slow_window: int,
+    quantity: int = 1,
+) -> TrendBacktestResult:
+    sorted_bars = sorted(bars, key=lambda b: b.timestamp)
+    points = generate_crossover_signal_series(sorted_bars, fast_window, slow_window)
+    trades = build_trades_from_direction_points(
+        sorted_bars, points, root=root, instrument=instrument,
+        costs_config=costs_config, scenario=scenario, quantity=quantity,
+    )
     return TrendBacktestResult(
         strategy_id=STRATEGY_ID,
         root=root,
