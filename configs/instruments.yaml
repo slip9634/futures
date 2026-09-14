@@ -133,3 +133,55 @@ instruments:
       method: volume_crossover
       fallback_days_before_expiry: 5
     deliverable: false
+
+  SPY:
+    description: SPDR S&P 500 ETF Trust (STK, not a future -- no roll rule applies; added for H017's non-futures extension) -- equity proxy for MES/ES
+    root: SPY
+    exchange: ARCA
+    currency: USD
+    multiplier: 1       # 1 share; not a futures contract multiplier
+    tick_size: 0.01
+    tick_value: 0.01
+    # equities have no globex/maintenance-break analog -- both fields set to
+    # standard NYSE/ARCA RTH as a placeholder; roll below is UNUSED (never
+    # rolls) but required by the current schema, which has no non-futures
+    # instrument type yet -- see H017 ledger note flagging this as tech debt
+    rth_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    globex_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    maintenance_break: {start: "16:00", end: "16:01", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 36500
+    deliverable: false
+
+  GLD:
+    description: SPDR Gold Shares ETF (STK, not a future -- see SPY note above) -- equity proxy for MGC/GC
+    root: GLD
+    exchange: ARCA
+    currency: USD
+    multiplier: 1
+    tick_size: 0.01
+    tick_value: 0.01
+    rth_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    globex_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    maintenance_break: {start: "16:00", end: "16:01", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 36500
+    deliverable: false
+
+  USO:
+    description: United States Oil Fund ETF (STK, not a future -- see SPY note above) -- equity proxy for MCL/CL
+    root: USO
+    exchange: ARCA
+    currency: USD
+    multiplier: 1
+    tick_size: 0.01
+    tick_value: 0.01
+    rth_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    globex_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    maintenance_break: {start: "16:00", end: "16:01", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 36500
+    deliverable: false

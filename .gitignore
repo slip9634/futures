@@ -29,6 +29,9 @@ data/external/*
 !data/raw/MGC/
 !data/raw/MCL/
 !data/raw/MBT/
+!data/raw/SPY/
+!data/raw/GLD/
+!data/raw/USO/
 logs/*
 !logs/.gitkeep
 state/*

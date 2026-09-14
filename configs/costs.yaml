@@ -14,6 +14,9 @@ commission_per_contract:
   MCL: 0.47
   CL: 2.05
   MBT: 0.50   # unverified placeholder, same order of magnitude as other micro contracts -- see note at top of file
+  SPY: 0.005  # per share, unverified placeholder (~IBKR US Reg NMS tiered rate)
+  GLD: 0.005
+  USO: 0.005
 
 exchange_and_regulatory_fees_per_contract:
   MES: 0.35
@@ -23,6 +26,9 @@ exchange_and_regulatory_fees_per_contract:
   MCL: 0.35
   CL: 1.60
   MBT: 0.35   # unverified placeholder, same order of magnitude as other micro contracts -- see note at top of file
+  SPY: 0.003  # per share, unverified placeholder
+  GLD: 0.003
+  USO: 0.003
 
 scenarios:
   base:
