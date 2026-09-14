@@ -1,0 +1,53 @@
+{
+  "experiment_id": "ROLL_YIELD_CARRY_v1_MCL_20260914",
+  "strategy_id": "ROLL_YIELD_CARRY_v1",
+  "academic_source": "Fama & French (1987, Journal of Business) and Erb & Harvey (2006, Financial Analysts Journal) - commodity futures term-structure/backwardation risk premium",
+  "specification": "sign(ln(front_close/next_close)); backwardation (front>next) -> LONG, contango (front<next) -> SHORT; stop-and-reverse, next-bar execution; only front contract traded",
+  "instrument": "MCL (front=MCLV6, next=MCLX6)",
+  "bar_size": "1day",
+  "sample_period": "2025-11-25 to 2026-09-11 (199 calendar bars, 197 days with a valid front/next signal)",
+  "regime_split": {
+    "backwardation_days": 186,
+    "contango_days": 11
+  },
+  "results_by_scenario": {
+    "base": {
+      "n_signal_days": 197,
+      "n_trades": 6,
+      "gross_pnl": 4118.0,
+      "net_pnl": 4108.16,
+      "win_rate": 0.5,
+      "avg_trade_net": 684.69,
+      "naive_t_stat": 0.9581821518925593
+    },
+    "conservative": {
+      "n_signal_days": 197,
+      "n_trades": 6,
+      "gross_pnl": 4109.0,
+      "net_pnl": 4099.16,
+      "win_rate": 0.5,
+      "avg_trade_net": 683.19,
+      "naive_t_stat": 0.9560830030358872
+    },
+    "stress": {
+      "n_signal_days": 197,
+      "n_trades": 6,
+      "gross_pnl": 4094.0,
+      "net_pnl": 4084.16,
+      "win_rate": 0.3333,
+      "avg_trade_net": 680.69,
+      "naive_t_stat": 0.9525844216080965
+    }
+  },
+  "buy_and_hold_benchmark": {
+    "description": "Simple long-only buy-and-hold of the same front contract over the same window (entry at bar[1].open, exit at bar[-1].close, same base-scenario cost model, single round trip) -- computed to check whether the roll-yield SIGNAL adds anything beyond simply being long a market that happened to be in backwardation almost the entire time.",
+    "entry_fill": 58.36,
+    "exit_fill": 100.04,
+    "gross_pnl": 4168.0,
+    "net_pnl": 4166.36,
+    "strategy_net_pnl_base": 4108.16,
+    "ratio_strategy_to_benchmark": 0.986
+  },
+  "conclusion": "NOT a demonstrated edge. The strategy is net positive and strikingly cost-robust (net barely moves from base to stress scenario, $4108->$4084, because holding periods are long so transaction costs are a tiny fraction of P&L -- a genuine structural property of carry-style strategies). But n=6 trades is far too few to mean anything statistically (naive t-stat ~0.96, itself not HAC-adjusted and not meaningful at this sample size), AND the strategy's net P&L is 98.6% of a naive buy-and-hold benchmark over the identical window. WTI was in backwardation 186 of 197 days (94%) while also rallying hard (58.36 -> 100.04, +71%) -- the roll-yield signal was net long almost the whole period simply because backwardation was persistent, so this result cannot be distinguished from the strategy having accidentally just captured market beta. A genuine test of the term-structure risk premium needs either (a) many more independent regime changes (multi-year data, per section 14) so LONG and SHORT periods are both well-sampled, or (b) a cross-sectional design (ranking multiple commodities by basis and going long the most-backwardated / short the most-contango, as Erb & Harvey 2006 actually do) rather than a single-instrument time-series version, which this project's single-instrument-at-a-time architecture does not yet support.",
+  "captured_at_utc": "2026-09-14T04:31:47.129725+00:00"
+}
