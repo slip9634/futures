@@ -1,0 +1,27 @@
+{
+  "symbol": "MESZ6",
+  "contract_id": 815824257,
+  "contract_id_ex": "815824257@CME",
+  "exchange": "CME",
+  "root": "MES",
+  "bar_size": "5min",
+  "outside_rth": false,
+  "n_bars": 1000,
+  "chart_start_utc": "2026-08-26T20:10:00Z",
+  "chart_end_utc": "2026-09-11T21:00:00Z",
+  "source": "Interactive_Brokers_IBKR MCP connector, get_price_history",
+  "ibkr_source_field": "Last",
+  "delayed_seconds": 600,
+  "captured_at_utc": "2026-09-14T03:41:50.659961+00:00",
+  "data_quality": {
+    "is_clean": true,
+    "duplicate_timestamps": 0,
+    "out_of_order": 0,
+    "negative_volume": 0,
+    "zero_volume_bars": 12,
+    "crossed_high_low": 0,
+    "ohlc_outside_high_low": 0,
+    "extreme_jumps": 0
+  },
+  "note": "Single get_price_history call capped at 1000 bars with no pagination parameter available (no start/end date override in the tool schema). At 5-minute resolution this reaches back only ~16 calendar days (~11-12 RTH trading days). See data/metadata/depth_assessment.json and README for the full Section-14 finding."
+}

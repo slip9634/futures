@@ -1,0 +1,31 @@
+{
+  "purpose": "Section 14 requires determining exactly what historical depth IBKR (here, the Interactive_Brokers_IBKR MCP connector) can provide before assuming it is sufficient for multi-year intraday research.",
+  "method": "Live get_price_history calls against real front-month contracts on 2026-09-14, varying step/period/step_count until the tool's own error message or returned range revealed the limit.",
+  "findings": [
+    {
+      "step": "FIVE_MINS",
+      "requested": "period=ONE_MONTH",
+      "result": "error: \"Combination of period and step will provide more then allowed 1000 data points\""
+    },
+    {
+      "step": "FIVE_MINS",
+      "requested": "step_count=1000 (max)",
+      "result": "succeeded; returned exactly 1000 bars spanning chart_start=2026-08-26T20:10:00Z to chart_end=2026-09-11T20:55:00Z (~16 calendar days, ~12 RTH trading days)",
+      "contract": "MESZ6 (815824257@CME)"
+    },
+    {
+      "step": "ONE_HOUR",
+      "requested": "period=SIX_MONTHS",
+      "result": "error: \"Combination of period and step will provide more then allowed 1000 data points\""
+    },
+    {
+      "step": "ONE_HOUR",
+      "requested": "period=THREE_MONTHS",
+      "result": "succeeded for all three execution instruments; chart_start=2026-06-15T13:30:00Z to chart_end=2026-09-11T21:00:00Z (~3 calendar months, RTH-only since outside_rth=false)",
+      "contracts": ["MESZ6 (815824257@CME)", "MGCV6 (744880158@COMEX)", "MCLV6 (661016531@NYMEX)"]
+    }
+  ],
+  "critical_limitation": "The get_price_history tool schema exposes no start/end date parameter and no pagination cursor -- only `period` (a fixed lookback from now) or `step_count` (a bar count from now). There is no way discovered so far to request an older window once the ~1000-bar cap for a given bar size is reached. This means the connector can serve, at most, roughly the MOST RECENT ~2.5 weeks of 5-minute bars or ~3 months of hourly bars, and cannot be paged further back.",
+  "conclusion": "This connector is NOT sufficient for the multi-year 5-minute-to-4-hour academic replication and backtesting the mandate requires (section 8-11, section 17's 50-60%/20-25%/20-25% chronological split needs years of data). Per section 14, a specialised vendor (Databento, CME DataMine, Barchart, or similar) is required for real Phase 3/4 research. This connector remains useful for: (a) live/near-real-time quotes for the shadow paper-trading engine, (b) a recent-window sanity/smoke-test dataset, (c) contract/ladder resolution.",
+  "recorded_at_utc": "2026-09-14"
+}

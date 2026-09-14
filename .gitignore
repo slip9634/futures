@@ -12,16 +12,25 @@ venv/
 .coverage
 htmlcov/
 
-# data & runtime state are large/derived/sensitive - never commit
+# data & runtime state are normally large/derived/sensitive - not committed
+# by default. Exception: this environment's containers are ephemeral and
+# re-cloned from git each session, so anything meant to survive across
+# sessions (the shadow/forward-test ledger, small research data snapshots)
+# has to actually be committed - git is the only persistence this project
+# has. See src/futures_quant/persistence/ledger.py.
 data/raw/*
 data/interim/*
 data/processed/*
 data/external/*
 !data/**/.gitkeep
+# small, deliberately-committed real data samples (see data/metadata/ for
+# provenance) - not a place for bulk/multi-year research data.
+!data/raw/MES/
 logs/*
 !logs/.gitkeep
 state/*
 !state/.gitkeep
+!state/paper_shadow/
 reports/backtests/*
 reports/walkforward/*
 reports/forward_test/*
