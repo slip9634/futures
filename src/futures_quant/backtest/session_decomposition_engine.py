@@ -4,7 +4,14 @@
 Each day is one discrete round-trip trade on whichever leg is selected:
   - "overnight": BUY at day i-1's close, SELL at day i's open (i>=1).
   - "intraday":  BUY at day i's open, SELL at day i's close.
-Both are always LONG (this project is testing whether either leg simply
+  - "extended":  BUY at day i's open, SELL at day i+1's open (i.e. the
+    intraday leg PLUS that night's overnight leg, held as one continuous
+    position with a single round-trip cost instead of two separate ones).
+    This is the mechanism behind the retail "buy the open, sell the next
+    day" heuristic -- tested here as its own leg rather than assumed to
+    equal intraday+overnight summed, since combining them into one trade
+    changes the cost profile (one round trip per day instead of two).
+All three are always LONG (this project is testing whether a leg simply
 carries a persistent structural return, not searching for a directional
 signal), so a leg's result is directly comparable to a full-period
 buy-and-hold benchmark computed the same way elsewhere in this project.
@@ -34,7 +41,7 @@ from futures_quant.strategies.session_return_decomposition import (
     compute_session_returns,
 )
 
-Leg = Literal["overnight", "intraday"]
+Leg = Literal["overnight", "intraday", "extended"]
 
 
 @dataclass(frozen=True)
@@ -137,10 +144,17 @@ def run_session_decomposition_backtest(
             this_bar = sorted_bars[i]
             entry_fill = make_fill(Side.BUY, prev_bar.close, prev_bar.timestamp)
             exit_fill = make_fill(Side.SELL, this_bar.open, this_bar.timestamp)
-        else:  # intraday
+        elif leg == "intraday":
             this_bar = sorted_bars[i]
             entry_fill = make_fill(Side.BUY, this_bar.open, this_bar.timestamp)
             exit_fill = make_fill(Side.SELL, this_bar.close, this_bar.timestamp)
+        else:  # extended: buy today's open, sell tomorrow's open
+            if i + 1 >= len(sorted_bars):
+                continue
+            this_bar = sorted_bars[i]
+            next_bar = sorted_bars[i + 1]
+            entry_fill = make_fill(Side.BUY, this_bar.open, this_bar.timestamp)
+            exit_fill = make_fill(Side.SELL, next_bar.open, next_bar.timestamp)
 
         gross_pnl = (
             (exit_fill.fill_price - entry_fill.fill_price) * quantity * instrument.multiplier

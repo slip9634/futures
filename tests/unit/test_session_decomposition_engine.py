@@ -116,3 +116,38 @@ def test_empty_series_produces_no_overnight_trades():
         costs_config=_zero_cost_config(), scenario="base", leg="overnight",
     )
     assert result.n_trades == 0
+
+
+def test_extended_leg_buys_open_sells_next_day_open():
+    bars = [_bar(0, 100.0, 101.0), _bar(1, 103.0, 99.0), _bar(2, 105.0, 102.0)]
+    result = run_session_decomposition_backtest(
+        bars, root="MES", bar_size="1day", instrument=_mes_spec(),
+        costs_config=_zero_cost_config(), scenario="base", leg="extended",
+    )
+    assert result.n_trades == 2  # last bar has no "next open" to sell at
+    # day0: buy at day0 open (100.0), sell at day1 open (103.0)
+    assert result.trades[0].gross_pnl == pytest.approx((103.0 - 100.0) * 5)
+    # day1: buy at day1 open (103.0), sell at day2 open (105.0)
+    assert result.trades[1].gross_pnl == pytest.approx((105.0 - 103.0) * 5)
+    assert result.trades[0].session_date == bars[0].timestamp.date()
+
+
+def test_extended_leg_single_bar_produces_no_trades():
+    bars = [_bar(0, 100.0, 101.0)]
+    result = run_session_decomposition_backtest(
+        bars, root="MES", bar_size="1day", instrument=_mes_spec(),
+        costs_config=_zero_cost_config(), scenario="base", leg="extended",
+    )
+    assert result.n_trades == 0
+
+
+def test_extended_leg_pays_one_round_trip_cost_per_day():
+    bars = [_bar(i, 100.0 + i, 101.0 + i) for i in range(6)]
+    result = run_session_decomposition_backtest(
+        bars, root="MES", bar_size="1day", instrument=_mes_spec(),
+        costs_config=_real_cost_config(), scenario="base", leg="extended",
+    )
+    assert result.n_trades == 5  # 6 bars -> 5 "buy open, sell next open" trades
+    total_cost = result.gross_pnl_sum - result.net_pnl_sum
+    per_trade_cost = result.trades[0].costs.total
+    assert total_cost == pytest.approx(per_trade_cost * 5)
