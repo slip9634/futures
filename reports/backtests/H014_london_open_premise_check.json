@@ -1,0 +1,42 @@
+{
+  "hypothesis_id": "H014",
+  "purpose": "Premise check performed BEFORE building any London-open breakout strategy: does MGC (gold futures, COMEX) show a volume/volatility cluster around the London session open, comparable to the NY-open cluster already implicitly assumed by H004 (ORB_v1)? User explicitly questioned whether session-open breakout logic even applies to futures given ~23h/day trading.",
+  "data_source": "First-ever outside_rth=true fetch this project (all prior intraday fetches used outside_rth=false, RTH-only). MGCV6 (contract_id 744880158, COMEX), step=FIFTEEN_MINS, step_count=1000 (max).",
+  "data_file": "data/raw/MGC/MGCV6_15min_20260828_20260914_outsideRTH.csv",
+  "window": {
+    "chart_start": "2026-08-28T12:15:00Z",
+    "chart_end": "2026-09-14T11:30:00Z",
+    "n_bars": 1000,
+    "note": "~17 calendar days -- SHORTER than the ~46-day/1000-bar depth for RTH-only 15min bars (data/metadata/depth_assessment.json), because 24h/day bars consume the same 1000-bar cap in fewer calendar days."
+  },
+  "method": "Grouped all bars by UTC hour-of-day; computed average bar volume and average (high-low) range per hour across the full window, then repeated independently on a chronological split-half (first ~8.5 days vs second ~8.5 days) as a robustness check against a single sub-period dominating the result.",
+  "full_window_hourly_avg_volume": {
+    "00": 448.6, "01": 651.4, "02": 455.5, "03": 372.1, "04": 244.3, "05": 344.4,
+    "06": 297.4, "07": 238.5, "08": 321.1, "09": 247.5, "10": 232.6, "11": 302.7,
+    "12": 890.0, "13": 1102.0, "14": 1047.5, "15": 713.2, "16": 506.5, "17": 330.4,
+    "18": 402.3, "19": 354.7, "20": 210.4, "21": 0, "22": 252.1, "23": 268.1
+  },
+  "split_half_hourly_avg_volume": {
+    "first_half": {
+      "span": "2026-08-28T12:15Z to 2026-09-06T23:00Z (n=500)",
+      "london_open_07_08_utc": [266.1, 409.4],
+      "ny_open_12_13_14_utc": [945.5, 1314.0, 1422.8]
+    },
+    "second_half": {
+      "span": "2026-09-06T23:15Z to 2026-09-14T11:30Z (n=500)",
+      "london_open_07_08_utc": [215.5, 247.5],
+      "ny_open_12_13_14_utc": [826.1, 847.6, 597.0]
+    }
+  },
+  "sanity_checks": {
+    "maintenance_break": "hour 21 UTC (5-6pm ET) shows 0 bars in both halves -- correctly reflects CME/COMEX daily maintenance break, confirms data integrity",
+    "holiday_check": "2026-09-07 (Labor Day, US holiday) shows reduced daily volume (21251 vs ~35000-49000 typical) but does not change the qualitative hourly pattern -- NY-open hours still dominate in the half containing this date"
+  },
+  "conclusion": "PREMISE REJECTED for MGC. London open (~07:00-08:00 UTC during BST) is one of the LOWEST-volume windows of the 23h session (238-409 contracts/bar), not elevated at all. NY cash equity open (~12:00-14:00 UTC) is unambiguously the dominant volume/volatility cluster (890-1423 contracts/bar, 2.7x-4.6x London-open levels), consistent in both independent halves of the sample. Building a London-open ORB variant on MGC would be testing a strategy whose own economic premise already fails a direct empirical check. Not proceeding to build H014 as a full strategy on this instrument.",
+  "caveats": [
+    "Sample is short (~17 days, 44 observations per hour) and single-instrument (MGC only, chosen for its plausible London/gold-fix linkage) -- this is a premise check, not a definitive claim that no futures product ever shows a London-open effect.",
+    "naive_t_stat / formal significance testing not applicable -- this is a descriptive volume/range comparison, not a strategy backtest with trades.",
+    "MES and MCL were not checked -- MES (US equity index) has no plausible London-session linkage and MCL (WTI crude) is priced more by US/Cushing dynamics than London hours, so neither was considered a priori as likely as MGC for this specific mechanism."
+  ],
+  "recorded_at_utc": "2026-09-14"
+}
