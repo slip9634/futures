@@ -66,3 +66,25 @@ def test_leader_and_target_different_calendars_align_by_date_only():
     # only target's day2 bar has a matching leader date (day2 leader return computed)
     assert len(signals) == 1
     assert signals[0].session_date == target[1].timestamp.date()
+
+
+def test_invert_flips_long_to_short():
+    leader = [_bar(0, 100.0), _bar(1, 110.0)]  # day1: leader up +10%
+    target = [_bar(0, 50.0), _bar(1, 55.0)]
+    signals = generate_lead_lag_signals(leader, target, invert=True)
+    assert signals[0].direction == Direction.SHORT
+    assert signals[0].leader_return == pytest.approx(0.10)  # raw return unchanged
+
+
+def test_invert_flips_short_to_long():
+    leader = [_bar(0, 100.0), _bar(1, 90.0)]  # day1: leader down
+    target = [_bar(0, 50.0), _bar(1, 55.0)]
+    signals = generate_lead_lag_signals(leader, target, invert=True)
+    assert signals[0].direction == Direction.LONG
+
+
+def test_invert_still_skips_zero_return():
+    leader = [_bar(0, 100.0), _bar(1, 100.0)]  # flat
+    target = [_bar(0, 50.0), _bar(1, 55.0)]
+    signals = generate_lead_lag_signals(leader, target, invert=True)
+    assert signals == []

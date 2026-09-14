@@ -120,3 +120,20 @@ def test_flat_leader_return_produces_no_trades():
         instrument=_target_spec("TGT"), costs_config=_zero_cost_config("TGT"), scenario="base",
     )
     assert result.n_trades == 0
+
+
+def test_invert_flips_direction_and_pnl_sign():
+    # same fixture as test_positive_leader_return_trades_target_long_next_bar,
+    # but inverted -> leader up should now trade the target SHORT
+    leader = [_bar(0, 100.0, 100.0), _bar(1, 100.0, 110.0)]  # day1: leader +10%
+    target = [_bar(0, 50.0, 50.0), _bar(1, 55.0, 55.0), _bar(2, 60.0, 65.0)]
+    result = run_cross_asset_lead_lag_backtest(
+        leader, target, leader_root="LEAD", target_root="TGT", bar_size="1day",
+        instrument=_target_spec("TGT"), costs_config=_zero_cost_config("TGT"), scenario="base",
+        invert=True,
+    )
+    assert result.n_trades == 1
+    trade = result.trades[0]
+    assert trade.direction == Direction.SHORT
+    # target rose 60->65, so the SHORT trade loses exactly what the LONG trade won
+    assert trade.gross_pnl == pytest.approx(-(65.0 - 60.0) * 5)

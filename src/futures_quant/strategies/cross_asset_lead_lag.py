@@ -64,8 +64,15 @@ class LeadLagSignal:
 
 
 def generate_lead_lag_signals(
-    leader_bars: list[OHLCVBar], target_bars: list[OHLCVBar]
+    leader_bars: list[OHLCVBar], target_bars: list[OHLCVBar], *, invert: bool = False
 ) -> list[LeadLagSignal]:
+    """`invert=True` flips the direction mapping (SHORT target when leader
+    is up, LONG target when leader is down) -- a pre-registered follow-up
+    test of the MIRROR relationship, used when an initial same-direction
+    result comes back with a clean, verified NEGATIVE sign (as
+    CROSS_ASSET_LEAD_LAG_v1's MBT->MCL result did in H012), rather than a
+    post-hoc re-fit: the direction to test is decided from the prior
+    result's sign, not searched for."""
     leader_return_by_date = compute_leader_return_by_date(leader_bars)
     sorted_target = sorted(target_bars, key=lambda b: b.timestamp)
 
@@ -74,7 +81,10 @@ def generate_lead_lag_signals(
         r = leader_return_by_date.get(bar.timestamp.date())
         if r is None or r == 0:
             continue
-        direction = Direction.LONG if r > 0 else Direction.SHORT
+        positive = r > 0
+        if invert:
+            positive = not positive
+        direction = Direction.LONG if positive else Direction.SHORT
         signals.append(
             LeadLagSignal(
                 target_bar_index=i, session_date=bar.timestamp.date(),

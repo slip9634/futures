@@ -234,5 +234,9 @@
         "note": "overlaps almost entirely with MCL's clean window -- consistent with the corrected re-run above"
       }
     }
+  },
+  "h013_followup_correction": {
+    "summary": "H013 (same session) tested the inverse direction and decomposed P&L by long/short side. Finding: this MBT->MCL result is substantially explained by MCL's own strong directional drift over the clean window (buy-and-hold +$4250) interacting with the original signal's short-heavy trade balance (94 short / 82 long) -- shorts alone lost -$3110, longs alone were +$795. Most likely beta exposure, not a genuine BTC->MCL information relationship. See reports/backtests/H013_INVERSE_BTC_MCL.json and hypothesis_ledger.csv H013 for the full diagnostic.",
+    "confidence_revision": "substantially downgraded from the original writeup in this file"
   }
 }

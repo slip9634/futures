@@ -1,0 +1,70 @@
+{
+  "experiment_id": "H013_INVERSE_BTC_MCL_20260914",
+  "strategy_id": "CROSS_ASSET_LEAD_LAG_v1 (invert=True)",
+  "description": "User-requested inverse of H012's MBT->MCL result: LONG MCL when BTC's prior day close-to-close return is NEGATIVE, SHORT when positive. Pre-registered follow-up (direction chosen from H012's own verified negative sign), not a post-hoc re-fit.",
+  "leader": "MBT (CME Micro Bitcoin futures)",
+  "target": "MCL",
+  "full_window_caveat": "full_window includes MCL's known-stale pre-2025-12-26 bars (see H009/H012) -- reported for completeness but NOT the trustworthy number",
+  "clean_window": "MCL bars restricted to >= 2025-12-26 (same cutoff independently established in H009, not fit to this result)",
+  "captured_at_utc": "2026-09-14T08:51:37.338328Z",
+  "results": {
+    "full_window": [
+      {
+        "scenario": "base",
+        "n_trades": 358,
+        "net_pnl": 242.88,
+        "gross_pnl": 830.0,
+        "win_rate": 0.2626,
+        "avg_trade_net": 0.68,
+        "naive_t_stat": 0.176
+      },
+      {
+        "scenario": "conservative",
+        "n_trades": 358,
+        "net_pnl": -294.12,
+        "gross_pnl": 293.0,
+        "win_rate": 0.2514,
+        "avg_trade_net": -0.82,
+        "naive_t_stat": -0.2131
+      },
+      {
+        "scenario": "stress",
+        "n_trades": 358,
+        "net_pnl": -1189.12,
+        "gross_pnl": -602.0,
+        "win_rate": 0.2486,
+        "avg_trade_net": -3.32,
+        "naive_t_stat": -0.8617
+      }
+    ],
+    "clean_window": [
+      {
+        "scenario": "base",
+        "n_trades": 176,
+        "net_pnl": 1034.36,
+        "gross_pnl": 1323.0,
+        "win_rate": 0.483,
+        "avg_trade_net": 5.88,
+        "naive_t_stat": 0.758
+      },
+      {
+        "scenario": "conservative",
+        "n_trades": 176,
+        "net_pnl": 770.36,
+        "gross_pnl": 1059.0,
+        "win_rate": 0.4659,
+        "avg_trade_net": 4.38,
+        "naive_t_stat": 0.5646
+      },
+      {
+        "scenario": "stress",
+        "n_trades": 176,
+        "net_pnl": 330.36,
+        "gross_pnl": 619.0,
+        "win_rate": 0.4602,
+        "avg_trade_net": 1.88,
+        "naive_t_stat": 0.2421
+      }
+    ]
+  }
+}

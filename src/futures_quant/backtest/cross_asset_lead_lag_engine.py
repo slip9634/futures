@@ -100,9 +100,10 @@ def run_cross_asset_lead_lag_backtest(
     costs_config: CostsConfig,
     scenario: str,
     quantity: int = 1,
+    invert: bool = False,
 ) -> LeadLagResult:
     sorted_target = sorted(target_bars, key=lambda b: b.timestamp)
-    signals = generate_lead_lag_signals(leader_bars, sorted_target)
+    signals = generate_lead_lag_signals(leader_bars, sorted_target, invert=invert)
     trade_costs = compute_round_trip_costs(target_root, costs_config, quantity)
     scenario_cfg = costs_config.scenarios[scenario]
     half_spread = scenario_cfg.spread_ticks / 2 * instrument.tick_size
