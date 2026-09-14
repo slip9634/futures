@@ -1,0 +1,44 @@
+{
+  "experiment_id": "SPREAD_MEAN_REV_v1_MCL_20260914",
+  "strategy_id": "SPREAD_MEAN_REV_v1",
+  "academic_source": "General spread mean-reversion mechanism discussed alongside Gatev, Goetzmann & Rouwenhorst (2006), Pairs Trading, RFS 19(3), 797-827, DOI: 10.1093/rfs/hhj020 -- citation caveat, network egress blocked all re-verification hosts; that paper's setting (cointegrated equity pairs) differs from a single commodity's own front/next term structure, so this is a mechanism test, not a replication.",
+  "specification": "spread(t) = front_close(t) - next_close(t); z-score of spread vs its own trailing 20-day mean/stdev; |z|>1.5 opens a market-neutral spread position (short spread if z>1.5, long spread if z<-1.5), |z|<0.25 flattens, otherwise holds. Both legs are the SAME product (MCLV6/MCLX6), so first-order exposure to the outright commodity price is cancelled by construction -- unlike H003 (ROLL_YIELD_CARRY_v1), which traded the front contract outright and was 98.6% explained by buy-and-hold beta.",
+  "instrument": "MCL (front=MCLV6, next=MCLX6)",
+  "sample_period": "2025-11-25 to 2026-09-11 (199 bars)",
+  "captured_at_utc": "2026-09-14T05:57:47.608962Z",
+  "results": [
+    {
+      "cost_scenario": "base",
+      "n_trades": 10,
+      "n_long_spread": 3,
+      "n_short_spread": 7,
+      "gross_pnl": -280.0,
+      "net_pnl": -312.8,
+      "win_rate": 0.3,
+      "avg_trade_net": -31.28,
+      "naive_t_stat": -0.9458
+    },
+    {
+      "cost_scenario": "conservative",
+      "n_trades": 10,
+      "n_long_spread": 3,
+      "n_short_spread": 7,
+      "gross_pnl": -310.0,
+      "net_pnl": -342.8,
+      "win_rate": 0.3,
+      "avg_trade_net": -34.28,
+      "naive_t_stat": -1.0365
+    },
+    {
+      "cost_scenario": "stress",
+      "n_trades": 10,
+      "n_long_spread": 3,
+      "n_short_spread": 7,
+      "gross_pnl": -360.0,
+      "net_pnl": -392.8,
+      "win_rate": 0.3,
+      "avg_trade_net": -39.28,
+      "naive_t_stat": -1.1877
+    }
+  ]
+}
