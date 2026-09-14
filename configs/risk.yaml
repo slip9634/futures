@@ -1,0 +1,28 @@
+reference_capital_usd: 100000
+
+per_trade:
+  max_risk_pct: 0.0025
+
+portfolio:
+  max_simultaneous_risk_pct: 0.0075
+  daily_stop_pct: 0.01
+  weekly_stop_pct: 0.025
+  target_annualised_vol: 0.10
+  target_annualised_vol_ceiling: 0.12
+  max_margin_utilisation: 0.30
+  max_drawdown_target: 0.12
+
+forbidden_sizing_methods:
+  - martingale
+  - unlimited_averaging_down
+  - recovery_grid
+  - doubling_after_loss
+  - unbounded_pyramiding
+  - loss_chasing
+  - sizing_from_recent_losses
+
+kill_switch:
+  max_consecutive_rejected_orders: 3
+  max_stale_data_seconds: 15
+  halt_on_position_mismatch: true
+  halt_on_unhandled_exception: true

@@ -1,0 +1,30 @@
+# PAPER trading deployment config. This file is intentionally conservative
+# and every value here is validated against the schema in
+# src/futures_quant/config/schema.py before use.
+
+environment:
+  trading_mode: PAPER_ONLY
+  allow_live_orders: false
+
+ibkr:
+  # Standard paper ports only. 7496 (TWS live) and 4001 (Gateway live) are
+  # rejected by the connection-state machine even if placed here by mistake.
+  host: ${IBKR_HOST}
+  port: ${IBKR_PORT}
+  client_id: ${IBKR_CLIENT_ID}
+  expected_account_prefix: DU   # IBKR paper account ids conventionally start with "DU"
+  allowed_ports: [7497, 4002]
+  forbidden_ports: [7496, 4001]
+
+scheduler:
+  timezone: America/New_York
+  reconcile_on_start: true
+  reconcile_on_reconnect: true
+  heartbeat_seconds: 10
+
+reporting:
+  daily_report: true
+  weekly_report: true
+  output_dir: reports/forward_test
+
+strategies_enabled: []   # nothing is enabled until a strategy reaches PAPER_READY status

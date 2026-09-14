@@ -1,0 +1,32 @@
+# Master safety + portfolio configuration.
+# See section 4 and 31 of the governing research mandate.
+
+environment:
+  trading_mode: PAPER_ONLY      # the ONLY legal value. Anything else fails closed.
+  allow_live_orders: false      # must remain false. No code path may flip this at runtime.
+  fail_closed: true             # any ambiguous state (account, connection, data) blocks trading
+
+portfolio:
+  reference_capital_usd: 100000   # section 6: never use IBKR's raw paper balance for CAGR math
+  target_volatility: 0.10         # 10-12% annualised vol target (section 7)
+  max_margin_utilisation: 0.30
+  max_drawdown_soft_limit: 0.12
+
+risk:
+  max_trade_risk_pct: 0.0025      # 0.25% of reference capital per new trade
+  max_total_open_risk_pct: 0.0075 # 0.75% simultaneous portfolio risk
+  daily_stop_pct: 0.01            # stop new trades for the day
+  weekly_stop_pct: 0.025          # weekly risk reduction trigger
+
+execution:
+  use_shadow_pnl: true            # shadow (conservative) P&L is the primary reality check
+  fail_closed: true
+  stale_data_seconds: 15
+  max_spread_ticks_multiple: 3.0  # reject trading if spread > N * typical spread
+
+logging:
+  level: INFO
+  dir: logs
+
+database:
+  path: state/futures_quant.duckdb

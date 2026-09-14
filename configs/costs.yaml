@@ -1,0 +1,40 @@
+# Transaction cost model. All values are per-side, per-contract, in the
+# instrument's own currency, unless noted. Query current IBKR commission
+# schedules and exchange fee schedules before relying on these for a final
+# report; treat these as conservative placeholder defaults pending that
+# verification (section 15).
+#
+# Three scenarios are required by the mandate: base, conservative, stress.
+
+commission_per_contract:
+  MES: 0.47
+  ES: 2.05
+  MGC: 0.47
+  GC: 2.05
+  MCL: 0.47
+  CL: 2.05
+
+exchange_and_regulatory_fees_per_contract:
+  MES: 0.35
+  ES: 1.50
+  MGC: 0.35
+  GC: 1.60
+  MCL: 0.35
+  CL: 1.60
+
+scenarios:
+  base:
+    spread_ticks: 1.0
+    slippage_ticks: 0.5
+    event_day_multiplier: 1.5
+  conservative:
+    spread_ticks: 1.5
+    slippage_ticks: 1.0
+    event_day_multiplier: 2.0
+  stress:
+    spread_ticks: 2.0
+    slippage_ticks: 2.0
+    event_day_multiplier: 3.0   # ~2x ordinary friction + event widening, per section 15
+
+rollover_cost_ticks: 1.0
+missed_passive_fill_penalty_ticks: 1.0

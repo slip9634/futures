@@ -1,0 +1,116 @@
+# Contract reference specs. These are standard published exchange specs and
+# MUST be re-confirmed against IBKR contract qualification (reqContractDetails)
+# before any execution — see section 53. Do not trust this file blindly at
+# trade time; it is the researched default, not a live source of truth.
+#
+# tick_value = tick_size * multiplier, always in `currency`.
+
+instruments:
+  MES:
+    description: Micro E-mini S&P 500 Futures
+    root: MES
+    signal_reference: ES
+    exchange: CME
+    currency: USD
+    multiplier: 5
+    tick_size: 0.25
+    tick_value: 1.25
+    quarterly_months: [H, M, U, Z]   # Mar, Jun, Sep, Dec
+    rth_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    globex_session: {start: "18:00", end: "17:00", tz: America/New_York}  # next-day close, w/ daily maint break
+    maintenance_break: {start: "17:00", end: "18:00", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 5
+    deliverable: false
+
+  ES:
+    description: E-mini S&P 500 Futures (signal/reference only)
+    root: ES
+    exchange: CME
+    currency: USD
+    multiplier: 50
+    tick_size: 0.25
+    tick_value: 12.50
+    quarterly_months: [H, M, U, Z]
+    rth_session: {start: "09:30", end: "16:00", tz: America/New_York}
+    globex_session: {start: "18:00", end: "17:00", tz: America/New_York}
+    maintenance_break: {start: "17:00", end: "18:00", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 5
+    deliverable: false
+
+  MGC:
+    description: Micro Gold Futures
+    root: MGC
+    signal_reference: GC
+    exchange: COMEX
+    currency: USD
+    multiplier: 10
+    tick_size: 0.10
+    tick_value: 1.00
+    quarterly_months: [G, J, M, Q, V, Z]  # Feb, Apr, Jun, Aug, Oct, Dec (active gold cycle)
+    rth_session: {start: "08:20", end: "13:30", tz: America/New_York}
+    globex_session: {start: "18:00", end: "17:00", tz: America/New_York}
+    maintenance_break: {start: "17:00", end: "18:00", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 5
+    deliverable: true
+    delivery_safety_buffer_days: 10   # NEVER hold MGC into delivery; roll/close well ahead (section 13)
+
+  GC:
+    description: COMEX Gold Futures (signal/reference only)
+    root: GC
+    exchange: COMEX
+    currency: USD
+    multiplier: 100
+    tick_size: 0.10
+    tick_value: 10.00
+    quarterly_months: [G, J, M, Q, V, Z]
+    rth_session: {start: "08:20", end: "13:30", tz: America/New_York}
+    globex_session: {start: "18:00", end: "17:00", tz: America/New_York}
+    maintenance_break: {start: "17:00", end: "18:00", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 5
+    deliverable: true
+    delivery_safety_buffer_days: 10
+
+  MCL:
+    description: Micro WTI Crude Oil Futures
+    root: MCL
+    signal_reference: CL
+    exchange: NYMEX
+    currency: USD
+    multiplier: 100
+    tick_size: 0.01
+    tick_value: 1.00
+    monthly: true   # crude trades every calendar month, not a quarterly cycle
+    rth_session: {start: "09:00", end: "14:30", tz: America/New_York}
+    globex_session: {start: "18:00", end: "17:00", tz: America/New_York}
+    maintenance_break: {start: "17:00", end: "18:00", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 3
+    deliverable: true
+    delivery_safety_buffer_days: 10
+
+  CL:
+    description: NYMEX WTI Crude Oil Futures (signal/reference only)
+    root: CL
+    exchange: NYMEX
+    currency: USD
+    multiplier: 1000
+    tick_size: 0.01
+    tick_value: 10.00
+    monthly: true
+    rth_session: {start: "09:00", end: "14:30", tz: America/New_York}
+    globex_session: {start: "18:00", end: "17:00", tz: America/New_York}
+    maintenance_break: {start: "17:00", end: "18:00", tz: America/New_York}
+    roll:
+      method: volume_crossover
+      fallback_days_before_expiry: 3
+    deliverable: true
+    delivery_safety_buffer_days: 10
