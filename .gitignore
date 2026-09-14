@@ -38,3 +38,6 @@ reports/walkforward/*
 reports/forward_test/*
 reports/weekly/*
 !reports/**/.gitkeep
+# small, deliberately-committed backtest result reports (same ephemeral-
+# container rationale as data/raw/ above) - not a place for bulk reports.
+!reports/backtests/*.json

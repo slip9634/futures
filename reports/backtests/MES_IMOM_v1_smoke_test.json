@@ -1,0 +1,43 @@
+{
+  "experiment_id": "MES_IMOM_v1_smoke_test_20260914",
+  "strategy_id": "MES_IMOM_v1",
+  "academic_source": "P001 (Gao, Han, Li & Zhou 2018, Market Intraday Momentum, JFE)",
+  "specification": "sign(first 30-min bar return) predicts direction traded in the last 30-min bar of the same session; original spec, no filters/modifications (section 11A)",
+  "instrument": "MES (MESZ6)",
+  "bar_size": "30min",
+  "data_source": "data/raw/MES/MESZ6_30min_20260608_20260911.csv",
+  "sample_period": "2026-06-08 to 2026-09-11 (~95 calendar days, 67 trading days with data)",
+  "quantity_per_trade": 1,
+  "important_caveat": "THIS IS NOT A VALID ACADEMIC REPLICATION OR A STATISTICALLY MEANINGFUL BACKTEST. It is a pipeline smoke test on the only data this environment's IBKR connector can reach (see data/metadata/depth_assessment.json) -- 67 trades is far below the mandate's own 100+ independent trades minimum (section 24) and the naive t-stats below are NOT HAC/Newey-West adjusted (section 45). No conclusion about whether the Gao et al. effect is real should be drawn from this run. It exists to prove entry/exit/cost-model mechanics are correct end-to-end, and it happens to also be the first real (if statistically weak) look at this specification on live MES data.",
+  "results_by_scenario": {
+    "base": {
+      "n_days_with_data": 67,
+      "n_trades": 67,
+      "gross_pnl_sum_usd": -158.75,
+      "net_pnl_sum_usd": -268.63,
+      "win_rate": 0.4328,
+      "avg_trade_net_usd": -4.01,
+      "naive_t_stat_not_hac_adjusted": -1.1574267272895158
+    },
+    "conservative": {
+      "n_days_with_data": 67,
+      "n_trades": 67,
+      "gross_pnl_sum_usd": -284.38,
+      "net_pnl_sum_usd": -394.25,
+      "win_rate": 0.4179,
+      "avg_trade_net_usd": -5.88,
+      "naive_t_stat_not_hac_adjusted": -1.6986981140138038
+    },
+    "stress": {
+      "n_days_with_data": 67,
+      "n_trades": 67,
+      "gross_pnl_sum_usd": -493.75,
+      "net_pnl_sum_usd": -603.63,
+      "win_rate": 0.3134,
+      "avg_trade_net_usd": -9.01,
+      "naive_t_stat_not_hac_adjusted": -2.6008170918876186
+    }
+  },
+  "conclusion": "Net P&L is negative in all three cost scenarios, and GROSS P&L (before any commission/fee/spread/slippage) is also negative (-$158.75 base window), so this is not simply a costs problem: the original sign(first-half-hour) -> last-half-hour direction did not work in this specific ~3-month window. Per section 21 ('too few independent observations') and section 93 ('failure is a valid output'), this does not currently qualify as a working strategy -- but 67 trades in one regime is also nowhere near enough to conclude the effect is dead. Status: provisionally not passing; genuinely undecided pending real multi-year data.",
+  "captured_at_utc": "2026-09-14T03:57:16.496118+00:00"
+}
