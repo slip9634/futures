@@ -1,0 +1,165 @@
+{
+  "experiment_id": "VOL_SCALED_TREND_v1_and_PORTFOLIO_20260914",
+  "h006_strategy_id": "VOL_SCALED_TREND_v1",
+  "h007_description": "3-asset (MES+MGC+MCL) combination of VOL_SCALED_TREND_v1 daily net P&L over their overlapping date window",
+  "trend_lookbacks": [
+    20,
+    60,
+    120
+  ],
+  "vol_lookback": 20,
+  "target_annual_vol": 0.15,
+  "max_weight": 3.0,
+  "captured_at_utc": "2026-09-14T05:29:50.902529Z",
+  "h006_per_instrument_results": [
+    {
+      "root": "MES",
+      "cost_scenario": "base",
+      "n_days": 124,
+      "gross_pnl": 1984.43,
+      "net_pnl": 1958.13,
+      "total_cost": 26.31,
+      "win_rate": 0.5081,
+      "daily_sharpe_like": 0.6476,
+      "max_drawdown": -3168.6,
+      "buy_and_hold_net_pnl": 4042.11,
+      "ratio_strategy_to_benchmark": 0.4844
+    },
+    {
+      "root": "MES",
+      "cost_scenario": "conservative",
+      "n_days": 124,
+      "gross_pnl": 1984.43,
+      "net_pnl": 1946.21,
+      "total_cost": 38.22,
+      "win_rate": 0.5081,
+      "daily_sharpe_like": 0.6436,
+      "max_drawdown": -3170.87,
+      "buy_and_hold_net_pnl": 4042.11,
+      "ratio_strategy_to_benchmark": 0.4815
+    },
+    {
+      "root": "MES",
+      "cost_scenario": "stress",
+      "n_days": 124,
+      "gross_pnl": 1984.43,
+      "net_pnl": 1926.35,
+      "total_cost": 58.08,
+      "win_rate": 0.5081,
+      "daily_sharpe_like": 0.6369,
+      "max_drawdown": -3174.65,
+      "buy_and_hold_net_pnl": 4042.11,
+      "ratio_strategy_to_benchmark": 0.4766
+    },
+    {
+      "root": "MGC",
+      "cost_scenario": "base",
+      "n_days": 327,
+      "gross_pnl": 4696.85,
+      "net_pnl": 4619.23,
+      "total_cost": 77.62,
+      "win_rate": 0.5107,
+      "daily_sharpe_like": 0.4461,
+      "max_drawdown": -8977.65,
+      "buy_and_hold_net_pnl": 15005.36,
+      "ratio_strategy_to_benchmark": 0.3078
+    },
+    {
+      "root": "MGC",
+      "cost_scenario": "conservative",
+      "n_days": 327,
+      "gross_pnl": 4696.85,
+      "net_pnl": 4587.25,
+      "total_cost": 109.6,
+      "win_rate": 0.5107,
+      "daily_sharpe_like": 0.443,
+      "max_drawdown": -8987.66,
+      "buy_and_hold_net_pnl": 15005.36,
+      "ratio_strategy_to_benchmark": 0.3057
+    },
+    {
+      "root": "MGC",
+      "cost_scenario": "stress",
+      "n_days": 327,
+      "gross_pnl": 4696.85,
+      "net_pnl": 4533.94,
+      "total_cost": 162.91,
+      "win_rate": 0.5107,
+      "daily_sharpe_like": 0.4379,
+      "max_drawdown": -9004.34,
+      "buy_and_hold_net_pnl": 15005.36,
+      "ratio_strategy_to_benchmark": 0.3022
+    },
+    {
+      "root": "MCL",
+      "cost_scenario": "base",
+      "n_days": 78,
+      "gross_pnl": 708.43,
+      "net_pnl": 703.44,
+      "total_cost": 4.99,
+      "win_rate": 0.5897,
+      "daily_sharpe_like": 1.7098,
+      "max_drawdown": -501.77,
+      "buy_and_hold_net_pnl": 4166.36,
+      "ratio_strategy_to_benchmark": 0.1688
+    },
+    {
+      "root": "MCL",
+      "cost_scenario": "conservative",
+      "n_days": 78,
+      "gross_pnl": 708.43,
+      "net_pnl": 701.39,
+      "total_cost": 7.05,
+      "win_rate": 0.5897,
+      "daily_sharpe_like": 1.7049,
+      "max_drawdown": -502.53,
+      "buy_and_hold_net_pnl": 4166.36,
+      "ratio_strategy_to_benchmark": 0.1683
+    },
+    {
+      "root": "MCL",
+      "cost_scenario": "stress",
+      "n_days": 78,
+      "gross_pnl": 708.43,
+      "net_pnl": 697.96,
+      "total_cost": 10.47,
+      "win_rate": 0.5897,
+      "daily_sharpe_like": 1.6968,
+      "max_drawdown": -503.81,
+      "buy_and_hold_net_pnl": 4166.36,
+      "ratio_strategy_to_benchmark": 0.1675
+    }
+  ],
+  "h007_portfolio_result": {
+    "n_overlapping_days": 78,
+    "overlap_start": "2026-05-20",
+    "overlap_end": "2026-09-10",
+    "pairwise_daily_net_pnl_correlations": {
+      "MES_MGC": -0.4264,
+      "MES_MCL": -0.2338,
+      "MGC_MCL": -0.0359
+    },
+    "individual_net_pnl_over_overlap": {
+      "MES": -968.98,
+      "MGC": -1874.81,
+      "MCL": 703.44
+    },
+    "individual_sharpe_like_over_overlap": {
+      "MES": -0.49,
+      "MGC": -0.8489,
+      "MCL": 1.7098
+    },
+    "individual_max_drawdown_over_overlap": {
+      "MES": -3168.6,
+      "MGC": -6217.19,
+      "MCL": -501.77
+    },
+    "portfolio_net_pnl": -2140.34,
+    "portfolio_sharpe_like": -0.9782,
+    "portfolio_max_drawdown": -6211.34,
+    "sum_of_individual_max_drawdowns": -9887.56,
+    "diversification_ratio_stdev": 2.1012,
+    "portfolio_buy_and_hold_benchmark_net_pnl": 176.08,
+    "portfolio_ratio_to_benchmark": -12.1555
+  }
+}
