@@ -1,0 +1,238 @@
+{
+  "experiment_id": "H012_CRYPTO_LEAD_LAG_MBT_20260914",
+  "strategy_id": "CROSS_ASSET_LEAD_LAG_v1 (leader=MBT, CME Micro Bitcoin futures)",
+  "description": "sign(MBT close-to-close return on day t) -> LONG/SHORT target at target's day t+1 open, exit at day t+1 close. Split by whether the target execution day is a Monday (crypto's weekend gap, the one place in this project's data where a genuinely 24/7 market's non-trading-day information shows up) vs any other weekday, to test whether the weekend specifically carries more cross-asset signal than an ordinary day.",
+  "data_quality_note": "281/364 MBT daily bars have open==close (stale marks, same pattern as MCL's older history -- newer, thinner-liquidity product). Does not affect this test: only MBT's close-to-close return is used as the leader signal (verified genuine, only 3/363 days repeat the prior close), and target instruments' own bars are already known clean.",
+  "instrument_spec_caveat": "MBT contract specs (0.1 BTC multiplier, not independently re-verified from a primary CME source -- network egress blocked) are NOT used here since MBT is only a signal source, never traded; only the already-verified target instrument specs (MES/MGC/MCL) are used for P&L.",
+  "captured_at_utc": "2026-09-14T08:47:01.636616Z",
+  "results": [
+    {
+      "target": "MES",
+      "scenario": "base",
+      "n_trades": 242,
+      "net_pnl": 1414.37,
+      "win_rate": 0.3471,
+      "naive_t_stat": 0.5869,
+      "monday": {
+        "n_trades": 48,
+        "net_pnl": 960.03,
+        "win_rate": 0.3542,
+        "t_stat": 0.8338
+      },
+      "other_weekday": {
+        "n_trades": 194,
+        "net_pnl": 454.34,
+        "win_rate": 0.3454,
+        "t_stat": 0.2143
+      }
+    },
+    {
+      "target": "MES",
+      "scenario": "conservative",
+      "n_trades": 242,
+      "net_pnl": 960.62,
+      "win_rate": 0.343,
+      "naive_t_stat": 0.3986,
+      "monday": {
+        "n_trades": 48,
+        "net_pnl": 870.03,
+        "win_rate": 0.3542,
+        "t_stat": 0.7557
+      },
+      "other_weekday": {
+        "n_trades": 194,
+        "net_pnl": 90.59,
+        "win_rate": 0.3402,
+        "t_stat": 0.0427
+      }
+    },
+    {
+      "target": "MES",
+      "scenario": "stress",
+      "n_trades": 242,
+      "net_pnl": 204.37,
+      "win_rate": 0.3347,
+      "naive_t_stat": 0.0848,
+      "monday": {
+        "n_trades": 48,
+        "net_pnl": 720.03,
+        "win_rate": 0.3542,
+        "t_stat": 0.6254
+      },
+      "other_weekday": {
+        "n_trades": 194,
+        "net_pnl": -515.66,
+        "win_rate": 0.3299,
+        "t_stat": -0.2432
+      }
+    },
+    {
+      "target": "MGC",
+      "scenario": "base",
+      "n_trades": 359,
+      "net_pnl": 10656.24,
+      "win_rate": 0.39,
+      "naive_t_stat": 1.5335,
+      "monday": {
+        "n_trades": 70,
+        "net_pnl": 1326.2,
+        "win_rate": 0.4,
+        "t_stat": 0.5852
+      },
+      "other_weekday": {
+        "n_trades": 289,
+        "net_pnl": 9330.04,
+        "win_rate": 0.3875,
+        "t_stat": 1.419
+      }
+    },
+    {
+      "target": "MGC",
+      "scenario": "conservative",
+      "n_trades": 359,
+      "net_pnl": 10117.74,
+      "win_rate": 0.3872,
+      "naive_t_stat": 1.456,
+      "monday": {
+        "n_trades": 70,
+        "net_pnl": 1221.2,
+        "win_rate": 0.4,
+        "t_stat": 0.5388
+      },
+      "other_weekday": {
+        "n_trades": 289,
+        "net_pnl": 8896.54,
+        "win_rate": 0.3841,
+        "t_stat": 1.3531
+      }
+    },
+    {
+      "target": "MGC",
+      "scenario": "stress",
+      "n_trades": 359,
+      "net_pnl": 9220.24,
+      "win_rate": 0.3872,
+      "naive_t_stat": 1.3268,
+      "monday": {
+        "n_trades": 70,
+        "net_pnl": 1046.2,
+        "win_rate": 0.4,
+        "t_stat": 0.4616
+      },
+      "other_weekday": {
+        "n_trades": 289,
+        "net_pnl": 8174.04,
+        "win_rate": 0.3841,
+        "t_stat": 1.2432
+      }
+    },
+    {
+      "target": "MCL",
+      "scenario": "base",
+      "n_trades": 358,
+      "net_pnl": -2849.12,
+      "win_rate": 0.2179,
+      "naive_t_stat": -2.0647,
+      "monday": {
+        "n_trades": 69,
+        "net_pnl": -1170.16,
+        "win_rate": 0.2029,
+        "t_stat": -1.8918
+      },
+      "other_weekday": {
+        "n_trades": 289,
+        "net_pnl": -1678.96,
+        "win_rate": 0.2215,
+        "t_stat": -1.3618
+      }
+    },
+    {
+      "target": "MCL",
+      "scenario": "conservative",
+      "n_trades": 358,
+      "net_pnl": -3386.12,
+      "win_rate": 0.2095,
+      "naive_t_stat": -2.4539,
+      "monday": {
+        "n_trades": 69,
+        "net_pnl": -1273.66,
+        "win_rate": 0.1884,
+        "t_stat": -2.0592
+      },
+      "other_weekday": {
+        "n_trades": 289,
+        "net_pnl": -2112.46,
+        "win_rate": 0.2145,
+        "t_stat": -1.7134
+      }
+    },
+    {
+      "target": "MCL",
+      "scenario": "stress",
+      "n_trades": 358,
+      "net_pnl": -4281.12,
+      "win_rate": 0.2039,
+      "naive_t_stat": -3.1025,
+      "monday": {
+        "n_trades": 69,
+        "net_pnl": -1446.16,
+        "win_rate": 0.1739,
+        "t_stat": -2.3381
+      },
+      "other_weekday": {
+        "n_trades": 289,
+        "net_pnl": -2834.96,
+        "win_rate": 0.2111,
+        "t_stat": -2.2994
+      }
+    }
+  ],
+  "mcl_data_quality_followup": {
+    "trigger": "MBT->MCL full-window base scenario showed an implausible 3.9% win rate in the first half of a chronological split-sample check",
+    "diagnosis": "MCL's pre-2025-12-26 daily bars are mostly stale (open==close), already documented in H009/depth_assessment.json; since this engine executes the target on its own open-to-close (intraday hold), most 'trades' in that window have zero gross P&L and lose only the cost -- explaining the abnormal win rate",
+    "corrected_rerun": {
+      "restriction": "MCL target bars restricted to >= 2025-12-26 (independently established clean-window start from H009, not fit to this result)",
+      "n_bars_in_window": 178,
+      "n_flat_bars_in_window": 16,
+      "results_by_scenario": {
+        "base": {
+          "n_trades": 176,
+          "net_pnl": -2315.64,
+          "win_rate": 0.398,
+          "naive_t_stat": -1.697
+        },
+        "conservative": {
+          "n_trades": 176,
+          "net_pnl": -2579.64,
+          "win_rate": 0.381,
+          "naive_t_stat": -1.8905
+        },
+        "stress": {
+          "n_trades": 176,
+          "net_pnl": -3019.64,
+          "win_rate": 0.369,
+          "naive_t_stat": -2.2129
+        }
+      },
+      "conclusion": "negative relationship survives on verified-clean data, weaker than the inflated pooled full-window number (t=-2.06 base) but still directionally consistent and moderately significant"
+    },
+    "split_sample_check": {
+      "first_half": {
+        "leader_window": "2025-03-31 to 2025-12-17",
+        "n_trades": 178,
+        "net_pnl": -565.92,
+        "win_rate": 0.039,
+        "naive_t_stat": -2.9803,
+        "note": "overlaps almost entirely with MCL's known-stale window -- not trustworthy on its own"
+      },
+      "second_half": {
+        "leader_window": "2025-12-18 to 2026-09-11",
+        "n_trades": 179,
+        "net_pnl": -2279.56,
+        "win_rate": 0.397,
+        "naive_t_stat": -1.6691,
+        "note": "overlaps almost entirely with MCL's clean window -- consistent with the corrected re-run above"
+      }
+    }
+  }
+}

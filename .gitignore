@@ -28,6 +28,7 @@ data/external/*
 !data/raw/MES/
 !data/raw/MGC/
 !data/raw/MCL/
+!data/raw/MBT/
 logs/*
 !logs/.gitkeep
 state/*
