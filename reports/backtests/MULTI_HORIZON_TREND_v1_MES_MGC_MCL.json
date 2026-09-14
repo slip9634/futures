@@ -1,0 +1,170 @@
+{
+  "experiment_id": "MULTI_HORIZON_TREND_v1_MES_MGC_MCL_daily_20260914",
+  "strategy_id": "MULTI_HORIZON_TREND_v1",
+  "academic_source": "General mechanism discussed alongside Moskowitz, Ooi & Pedersen (2012), Time Series Momentum, JFE 104(2), 228-250, DOI: 10.1016/j.jfineco.2011.11.003 -- citation caveat: sciencedirect.com and all re-verification hosts blocked by network egress; the consensus-voting rule across horizons is this project's own construction to fix H002's single-pair fragility, not a claimed replication of any specific paper's exact voting mechanism.",
+  "specification": "Vote = sum of sign(return) over 20/60/120-trading-day lookbacks. LONG if vote>0, SHORT if vote<0, tie (vote==0) skipped (no direction change). Stop-and-reverse, next-bar-open execution.",
+  "lookbacks_trading_days": [
+    20,
+    60,
+    120
+  ],
+  "bar_counts": {
+    "MES": 245,
+    "MGC": 448,
+    "MCL": 199
+  },
+  "sample_size_caveat": "MCL has only 199 total daily bars; with a 120-day longest lookback, only ~79 bars can ever produce a signal. MES (245 bars) and MGC (448 bars) have deeper history but are still far below the 100+ trade minimum this project's own hypothesis-ledger convention (see H001-H004) treats as a floor for taking a naive_t_stat seriously -- expect n_trades well under that here given trend-following's inherently low turnover.",
+  "buy_and_hold_benchmark_comparison": {
+    "MES": {
+      "strategy_net_pnl_base": 3406.33,
+      "buy_and_hold_net_pnl": 4042.11,
+      "ratio_strategy_to_benchmark": 0.8427
+    },
+    "MGC": {
+      "strategy_net_pnl_base": 7343.2,
+      "buy_and_hold_net_pnl": 15005.36,
+      "ratio_strategy_to_benchmark": 0.4894
+    },
+    "MCL": {
+      "strategy_net_pnl_base": 646.08,
+      "buy_and_hold_net_pnl": 4166.36,
+      "ratio_strategy_to_benchmark": 0.1551
+    }
+  },
+  "conclusion": "Net POSITIVE in raw dollar terms for all three instruments (base scenario), but in every case badly underperforms a naive buy-and-hold benchmark over the identical window -- see buy_and_hold_benchmark_comparison. All three instruments happened to trend strongly upward over their available sample windows; a strategy that only occasionally exits or flips short necessarily captures less of that rally than simply staying long throughout. This is the same failure mode already flagged for H003 (ROLL_YIELD_CARRY_v1): a nominally positive P&L that is largely explained by the sample period's own directional drift, not a genuine timing edge. Trade counts (3, 20, 3) are far too small for naive_t_stat (all well under 1.0, itself not HAC-adjusted) to mean anything. The consensus-voting fix for H002's fragility does appear to work as INTENDED -- it trades much less often than a single MA pair and avoids obvious whipsaw losses -- but trading less often also means capturing less of a persistent trend, which is exactly what happened here. Not a demonstrated edge.",
+  "captured_at_utc": "2026-09-14T05:17:57.345076Z",
+  "results": [
+    {
+      "root": "MES",
+      "bar_size": "1day",
+      "cost_scenario": "base",
+      "n_trades": 3,
+      "gross_pnl": 3411.25,
+      "net_pnl": 3406.33,
+      "win_rate": 0.6667,
+      "avg_trade_net": 1135.44,
+      "naive_t_stat": 0.8613
+    },
+    {
+      "root": "MES",
+      "bar_size": "1day",
+      "cost_scenario": "conservative",
+      "n_trades": 3,
+      "gross_pnl": 3405.62,
+      "net_pnl": 3400.71,
+      "win_rate": 0.6667,
+      "avg_trade_net": 1133.57,
+      "naive_t_stat": 0.8598
+    },
+    {
+      "root": "MES",
+      "bar_size": "1day",
+      "cost_scenario": "stress",
+      "n_trades": 3,
+      "gross_pnl": 3396.25,
+      "net_pnl": 3391.33,
+      "win_rate": 0.6667,
+      "avg_trade_net": 1130.44,
+      "naive_t_stat": 0.8575
+    },
+    {
+      "root": "MES",
+      "bar_size": "1day",
+      "cost_scenario": "base (buy&hold benchmark)",
+      "n_trades": 1,
+      "gross_pnl": 4043.75,
+      "net_pnl": 4042.11,
+      "win_rate": 1.0,
+      "avg_trade_net": 4042.11,
+      "naive_t_stat": null
+    },
+    {
+      "root": "MGC",
+      "bar_size": "1day",
+      "cost_scenario": "base",
+      "n_trades": 20,
+      "gross_pnl": 7376.0,
+      "net_pnl": 7343.2,
+      "win_rate": 0.5,
+      "avg_trade_net": 367.16,
+      "naive_t_stat": 0.6689
+    },
+    {
+      "root": "MGC",
+      "bar_size": "1day",
+      "cost_scenario": "conservative",
+      "n_trades": 20,
+      "gross_pnl": 7346.0,
+      "net_pnl": 7313.2,
+      "win_rate": 0.5,
+      "avg_trade_net": 365.66,
+      "naive_t_stat": 0.6662
+    },
+    {
+      "root": "MGC",
+      "bar_size": "1day",
+      "cost_scenario": "stress",
+      "n_trades": 20,
+      "gross_pnl": 7296.0,
+      "net_pnl": 7263.2,
+      "win_rate": 0.45,
+      "avg_trade_net": 363.16,
+      "naive_t_stat": 0.6616
+    },
+    {
+      "root": "MGC",
+      "bar_size": "1day",
+      "cost_scenario": "base (buy&hold benchmark)",
+      "n_trades": 1,
+      "gross_pnl": 15007.0,
+      "net_pnl": 15005.36,
+      "win_rate": 1.0,
+      "avg_trade_net": 15005.36,
+      "naive_t_stat": null
+    },
+    {
+      "root": "MCL",
+      "bar_size": "1day",
+      "cost_scenario": "base",
+      "n_trades": 3,
+      "gross_pnl": 651.0,
+      "net_pnl": 646.08,
+      "win_rate": 0.3333,
+      "avg_trade_net": 215.36,
+      "naive_t_stat": 0.2108
+    },
+    {
+      "root": "MCL",
+      "bar_size": "1day",
+      "cost_scenario": "conservative",
+      "n_trades": 3,
+      "gross_pnl": 646.5,
+      "net_pnl": 641.58,
+      "win_rate": 0.3333,
+      "avg_trade_net": 213.86,
+      "naive_t_stat": 0.2093
+    },
+    {
+      "root": "MCL",
+      "bar_size": "1day",
+      "cost_scenario": "stress",
+      "n_trades": 3,
+      "gross_pnl": 639.0,
+      "net_pnl": 634.08,
+      "win_rate": 0.3333,
+      "avg_trade_net": 211.36,
+      "naive_t_stat": 0.2069
+    },
+    {
+      "root": "MCL",
+      "bar_size": "1day",
+      "cost_scenario": "base (buy&hold benchmark)",
+      "n_trades": 1,
+      "gross_pnl": 4168.0,
+      "net_pnl": 4166.36,
+      "win_rate": 1.0,
+      "avg_trade_net": 4166.36,
+      "naive_t_stat": null
+    }
+  ]
+}
