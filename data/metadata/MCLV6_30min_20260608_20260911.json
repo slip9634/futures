@@ -1,0 +1,24 @@
+{
+  "symbol": "MCLV6",
+  "root": "MCL",
+  "contract_id": 661016531,
+  "contract_id_ex": "661016531@NYMEX",
+  "exchange": "NYMEX",
+  "bar_size": "30min",
+  "outside_rth": false,
+  "n_bars": 1000,
+  "chart_start_utc": "2026-06-08T16:00:00Z",
+  "chart_end_utc": "2026-09-11T21:00:00Z",
+  "source": "Interactive_Brokers_IBKR MCP connector, get_price_history",
+  "captured_at_utc": "2026-09-14T03:49:42.551377+00:00",
+  "data_quality": {
+    "is_clean": true,
+    "duplicate_timestamps": 0,
+    "out_of_order": 0,
+    "negative_volume": 0,
+    "zero_volume_bars": 16,
+    "crossed_high_low": 0,
+    "ohlc_outside_high_low": 0,
+    "extreme_jumps": 0
+  }
+}

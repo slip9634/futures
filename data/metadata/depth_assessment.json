@@ -23,9 +23,36 @@
       "requested": "period=THREE_MONTHS",
       "result": "succeeded for all three execution instruments; chart_start=2026-06-15T13:30:00Z to chart_end=2026-09-11T21:00:00Z (~3 calendar months, RTH-only since outside_rth=false)",
       "contracts": ["MESZ6 (815824257@CME)", "MGCV6 (744880158@COMEX)", "MCLV6 (661016531@NYMEX)"]
+    },
+    {
+      "step": "FIFTEEN_MINS",
+      "requested": "step_count=1000 (max)",
+      "result": "succeeded for all three; chart_start=2026-07-27, chart_end=2026-09-11 (~46 calendar days, ~32 RTH trading days). All 1000 bars, validate_bars clean (0 dup/out-of-order/crossed/extreme-jump), a handful of legitimate zero-volume bars (MES:2, MCL 30min:16).",
+      "contracts": ["MESZ6", "MGCV6", "MCLV6"],
+      "saved_to": "data/raw/{MES,MGC,MCL}/*_15min_20260727_20260911.csv"
+    },
+    {
+      "step": "THIRTY_MINS",
+      "requested": "step_count=1000 (max)",
+      "result": "succeeded for all three; chart_start=2026-06-08, chart_end=2026-09-11 (~95 calendar days, ~66 RTH trading days). All 1000 bars, validate_bars clean.",
+      "contracts": ["MESZ6", "MGCV6", "MCLV6"],
+      "saved_to": "data/raw/{MES,MGC,MCL}/*_30min_20260608_20260911.csv"
+    },
+    {
+      "step": "FOUR_HOURS",
+      "requested": "step_count=1000 (max)",
+      "result": "succeeded for all three; nominal chart_start/chart_end span ~2 years (MES: 2024-07-24 to 2026-09-11; MGC: 2024-07-29 to 2026-09-11; MCL: 2024-07-25 to 2026-09-11) but the ACTUAL returned bars are much sparser and start later than chart_start -- MES bars really begin 2025-09-23, MGC 2025-04-30 (with earlier isolated single bars going back further), MCL similarly patchy before ~2025-07-21. Many of the earliest bars are flat (open=high=low=close identical) with zero or near-zero volume -- these look like stale/no-trade marks on a not-yet-liquid or not-yet-front-month contract, not real price discovery. Real, densely-traded 4-hour data is really only available from roughly the last 6-9 months, not the full 2 years the date range suggests. This is an important data-quality caveat distinct from the raw depth cap: a longer nominal window does not mean uniformly usable data across that window. Not persisted to data/raw/ this pass (large, and quality caveat above means it needs the roll-adjusted continuous-series treatment from section 13 before use, not a raw single-contract dump).",
+      "contracts": ["MESZ6", "MGCV6", "MCLV6"]
     }
   ],
-  "critical_limitation": "The get_price_history tool schema exposes no start/end date parameter and no pagination cursor -- only `period` (a fixed lookback from now) or `step_count` (a bar count from now). There is no way discovered so far to request an older window once the ~1000-bar cap for a given bar size is reached. This means the connector can serve, at most, roughly the MOST RECENT ~2.5 weeks of 5-minute bars or ~3 months of hourly bars, and cannot be paged further back.",
-  "conclusion": "This connector is NOT sufficient for the multi-year 5-minute-to-4-hour academic replication and backtesting the mandate requires (section 8-11, section 17's 50-60%/20-25%/20-25% chronological split needs years of data). Per section 14, a specialised vendor (Databento, CME DataMine, Barchart, or similar) is required for real Phase 3/4 research. This connector remains useful for: (a) live/near-real-time quotes for the shadow paper-trading engine, (b) a recent-window sanity/smoke-test dataset, (c) contract/ladder resolution.",
+  "critical_limitation": "The get_price_history tool schema exposes no start/end date parameter and no pagination cursor -- only `period` (a fixed lookback from now) or `step_count` (a bar count from now). There is no way discovered so far to request an older window once the ~1000-bar cap for a given bar size is reached. This means the connector can serve, at most, roughly the MOST RECENT ~2.5 weeks of 5-minute bars, ~6-7 weeks of 15-minute, ~13-14 weeks of 30-minute, ~3 months of hourly, or (with the data-quality caveat above about sparse early history) up to roughly 6-9 months of genuinely liquid 4-hour bars -- and none of it can be paged further back.",
+  "depth_summary_by_bar_size": {
+    "5min": "~16 calendar days / ~12 RTH days (all 3 instruments)",
+    "15min": "~46 calendar days / ~32 RTH days (all 3 instruments)",
+    "30min": "~95 calendar days / ~66 RTH days (all 3 instruments)",
+    "1hour": "~3 calendar months (all 3 instruments)",
+    "4hour": "nominal ~2 years but only ~6-9 months of that is densely/genuinely traded; earlier bars are sparse stale marks (all 3 instruments)"
+  },
+  "conclusion": "This connector is NOT sufficient for the multi-year 5-minute-to-4-hour academic replication and backtesting the mandate requires (section 8-11, section 17's 50-60%/20-25%/20-25% chronological split needs years of data at every one of these bar sizes). Even the most favourable bar size (4-hour) gives well under a year of genuinely usable data -- not enough for a credible walk-forward split, let alone a multi-year academic replication. Per section 14, a specialised vendor (Databento, CME DataMine, Barchart, or similar) is required for real Phase 3/4 research. This connector remains useful for: (a) live/near-real-time quotes for the shadow paper-trading engine, (b) a recent-window sanity/smoke-test dataset for pipeline validation (NOT a statistically credible backtest), (c) contract/ladder resolution.",
   "recorded_at_utc": "2026-09-14"
 }

@@ -26,6 +26,8 @@ data/external/*
 # small, deliberately-committed real data samples (see data/metadata/ for
 # provenance) - not a place for bulk/multi-year research data.
 !data/raw/MES/
+!data/raw/MGC/
+!data/raw/MCL/
 logs/*
 !logs/.gitkeep
 state/*
