@@ -1,21 +1,30 @@
 """MES_IMOM_v1 -- intraday momentum, replication spec from section 9.1/11A.
 
-Gao, Han, Li & Zhou (2018), "Market Intraday Momentum" (JFE):
-the first half-hour return predicts the direction of the last half-hour
-return. This module implements exactly that specification -- sign of the
-first bar's return of the trading day determines the direction traded in
-the last bar of the same day, entering at the last bar's open and exiting
-at its close (i.e. no exposure at any other time of day).
+Gao, Han, Li & Zhou (2018), "Market Intraday Momentum" (Journal of
+Financial Economics): the first half-hour return predicts the direction of
+the last half-hour return.
 
-This is the ORIGINAL specification, not a modification: no volume filter,
-no volatility conditioning, no regime filter (section 11A: "Test the exact
-academic specification first. Only after reproducing it may you make
-modifications.").
+IMPORTANT -- exact specification, confirmed via the paper's own description
+(Gao/Han/Li/Zhou, JFE 2018; see e.g. the SSRN abstract at
+https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2552752): the first
+half-hour return is measured **from the prior trading day's close to
+10:00am**, not from the current day's own 9:30am open. It therefore
+includes the overnight gap. An earlier version of this module used the
+same-day open instead -- that was a real bug relative to the published
+spec, not a deliberate modification, and has been corrected here. The
+last half-hour return remains the last bar's own open-to-close return
+("into the 4:00pm close"), which the same source describes without any
+overnight component.
 
-Works on any bar size the caller groups by trading day -- the mandate
-authors' original paper used 30-minute bars, and that is what this project
-currently has enough data for (see data/metadata/depth_assessment.json),
-so `first bar` / `last bar` naturally means "first/last 30-minute bar" here.
+This module implements the ORIGINAL specification, not a modification: no
+volume filter, no volatility conditioning, no regime filter (section 11A:
+"Test the exact academic specification first. Only after reproducing it
+may you make modifications.").
+
+Works on any bar size the caller groups by trading day -- the original
+paper used 30-minute bars, and that is what this project currently has
+enough data for (see data/metadata/depth_assessment.json), so `first bar`
+/ `last bar` naturally means "first/last 30-minute bar" here.
 """
 
 from __future__ import annotations
@@ -40,6 +49,7 @@ class TradingDayBars:
     first_bar: OHLCVBar
     last_bar: OHLCVBar
     n_bars: int
+    prev_session_close: float | None  # None for the first day in the window (no prior close)
 
 
 def group_into_trading_days(
@@ -59,21 +69,30 @@ def group_into_trading_days(
         return b.timestamp.astimezone(tz).date()
 
     result = []
+    prev_close: float | None = None
     for day, group in groupby(sorted_bars, key=_local_date):
         day_bars = list(group)
         if len(day_bars) < MIN_BARS_PER_DAY:
+            prev_close = day_bars[-1].close if day_bars else prev_close
             continue
         result.append(
             TradingDayBars(
-                session_date=day, first_bar=day_bars[0], last_bar=day_bars[-1], n_bars=len(day_bars)
+                session_date=day,
+                first_bar=day_bars[0],
+                last_bar=day_bars[-1],
+                n_bars=len(day_bars),
+                prev_session_close=prev_close,
             )
         )
+        prev_close = day_bars[-1].close
     return result
 
 
-def first_half_hour_return(day: TradingDayBars) -> float:
-    b = day.first_bar
-    return (b.close - b.open) / b.open
+def first_half_hour_return(day: TradingDayBars) -> float | None:
+    """(10:00am price / prior day's close) - 1. None if there's no prior close."""
+    if day.prev_session_close is None:
+        return None
+    return (day.first_bar.close - day.prev_session_close) / day.prev_session_close
 
 
 def last_half_hour_return(day: TradingDayBars) -> float:
@@ -81,8 +100,10 @@ def last_half_hour_return(day: TradingDayBars) -> float:
     return (b.close - b.open) / b.open
 
 
-def generate_signal(day: TradingDayBars) -> Signal:
-    """Section-9.1 spec: sign(first-bar return) predicts last-bar direction.
+def generate_signal(day: TradingDayBars) -> Signal | None:
+    """Section-9.1 spec: sign(first-bar return, overnight-inclusive) predicts
+    last-bar direction. Returns None for a day with no prior close (first
+    day in the window) -- there is nothing to compute a signal from.
 
     The signal is only knowable once the first bar has closed, and it is
     acted on only at the open of the last bar -- there is no look-ahead
@@ -90,15 +111,17 @@ def generate_signal(day: TradingDayBars) -> Signal:
     open, which is always chronologically after the first bar's close.
     """
     r0 = first_half_hour_return(day)
+    if r0 is None:
+        return None
     direction = Direction.LONG if r0 > 0 else Direction.SHORT if r0 < 0 else Direction.FLAT
     return Signal(
         timestamp=day.last_bar.timestamp,
         direction=direction,
         strength=r0,
-        entry_reason=f"first_half_hour_return={r0:.5f}",
+        entry_reason=f"first_half_hour_return(overnight-inclusive)={r0:.5f}",
         feature_snapshot={
             "session_date": day.session_date.isoformat(),
-            "first_bar_open": day.first_bar.open,
+            "prev_session_close": day.prev_session_close,
             "first_bar_close": day.first_bar.close,
             "first_half_hour_return": r0,
         },
@@ -106,4 +129,11 @@ def generate_signal(day: TradingDayBars) -> Signal:
 
 
 def generate_all_signals(bars: list[OHLCVBar]) -> list[tuple[TradingDayBars, Signal]]:
-    return [(day, generate_signal(day)) for day in group_into_trading_days(bars) if day.n_bars >= 2]
+    pairs = []
+    for day in group_into_trading_days(bars):
+        if day.n_bars < 2:
+            continue
+        signal = generate_signal(day)
+        if signal is not None:
+            pairs.append((day, signal))
+    return pairs

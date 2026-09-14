@@ -1,0 +1,145 @@
+{
+  "captured_at_utc": "2026-09-14T04:11:03.784881+00:00",
+  "param_sets_tested": [
+    [
+      5,
+      20
+    ],
+    [
+      10,
+      30
+    ],
+    [
+      20,
+      50
+    ]
+  ],
+  "results": {
+    "MES_15min_5_20": {
+      "fast_window": 5,
+      "slow_window": 20,
+      "n_trades": 56,
+      "net_pnl_base": 539.41,
+      "win_rate": 0.3571
+    },
+    "MES_15min_10_30": {
+      "fast_window": 10,
+      "slow_window": 30,
+      "n_trades": 30,
+      "net_pnl_base": 1514.55,
+      "win_rate": 0.4667
+    },
+    "MES_15min_20_50": {
+      "fast_window": 20,
+      "slow_window": 50,
+      "n_trades": 18,
+      "net_pnl_base": 1760.48,
+      "win_rate": 0.5
+    },
+    "MES_30min_5_20": {
+      "fast_window": 5,
+      "slow_window": 20,
+      "n_trades": 52,
+      "net_pnl_base": 957.22,
+      "win_rate": 0.3846
+    },
+    "MES_30min_10_30": {
+      "fast_window": 10,
+      "slow_window": 30,
+      "n_trades": 36,
+      "net_pnl_base": 1623.46,
+      "win_rate": 0.4722
+    },
+    "MES_30min_20_50": {
+      "fast_window": 20,
+      "slow_window": 50,
+      "n_trades": 26,
+      "net_pnl_base": -3180.14,
+      "win_rate": 0.2692
+    },
+    "MGC_15min_5_20": {
+      "fast_window": 5,
+      "slow_window": 20,
+      "n_trades": 57,
+      "net_pnl_base": -3766.48,
+      "win_rate": 0.2807
+    },
+    "MGC_15min_10_30": {
+      "fast_window": 10,
+      "slow_window": 30,
+      "n_trades": 35,
+      "net_pnl_base": -3051.4,
+      "win_rate": 0.3143
+    },
+    "MGC_15min_20_50": {
+      "fast_window": 20,
+      "slow_window": 50,
+      "n_trades": 22,
+      "net_pnl_base": -1900.08,
+      "win_rate": 0.2727
+    },
+    "MGC_30min_5_20": {
+      "fast_window": 5,
+      "slow_window": 20,
+      "n_trades": 53,
+      "net_pnl_base": 797.08,
+      "win_rate": 0.3208
+    },
+    "MGC_30min_10_30": {
+      "fast_window": 10,
+      "slow_window": 30,
+      "n_trades": 39,
+      "net_pnl_base": 1005.04,
+      "win_rate": 0.3333
+    },
+    "MGC_30min_20_50": {
+      "fast_window": 20,
+      "slow_window": 50,
+      "n_trades": 27,
+      "net_pnl_base": -3467.28,
+      "win_rate": 0.3333
+    },
+    "MCL_15min_5_20": {
+      "fast_window": 5,
+      "slow_window": 20,
+      "n_trades": 62,
+      "net_pnl_base": -691.68,
+      "win_rate": 0.2903
+    },
+    "MCL_15min_10_30": {
+      "fast_window": 10,
+      "slow_window": 30,
+      "n_trades": 32,
+      "net_pnl_base": 614.52,
+      "win_rate": 0.3438
+    },
+    "MCL_15min_20_50": {
+      "fast_window": 20,
+      "slow_window": 50,
+      "n_trades": 12,
+      "net_pnl_base": 1867.32,
+      "win_rate": 0.5
+    },
+    "MCL_30min_5_20": {
+      "fast_window": 5,
+      "slow_window": 20,
+      "n_trades": 51,
+      "net_pnl_base": 1864.36,
+      "win_rate": 0.3922
+    },
+    "MCL_30min_10_30": {
+      "fast_window": 10,
+      "slow_window": 30,
+      "n_trades": 26,
+      "net_pnl_base": 3206.36,
+      "win_rate": 0.5385
+    },
+    "MCL_30min_20_50": {
+      "fast_window": 20,
+      "slow_window": 50,
+      "n_trades": 15,
+      "net_pnl_base": 2820.4,
+      "win_rate": 0.5333
+    }
+  }
+}

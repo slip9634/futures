@@ -59,9 +59,14 @@ def _real_cost_config() -> CostsConfig:
     )
 
 
+DAY0 = _bar("2026-06-08T20:00:00", 100, 100.5, 99.5, 100, v=1)  # supplies prior close = 100
+
+
 def test_zero_cost_long_trade_matches_hand_calc():
-    # +1% first bar -> LONG; last bar open=200, close=202 -> gross = (202-200)*5 = 10
+    # prior close=100, first bar closes at 101 -> r0=+1% -> LONG;
+    # last bar open=200, close=202 -> gross = (202-200)*5 = 10
     bars = [
+        DAY0,
         _bar("2026-06-09T13:30:00", 100, 101, 99, 101),
         _bar("2026-06-09T20:00:00", 200, 203, 199, 202),
     ]
@@ -76,9 +81,11 @@ def test_zero_cost_long_trade_matches_hand_calc():
 
 
 def test_zero_cost_short_trade_matches_hand_calc():
-    # -1% first bar -> SHORT; last bar open=200, close=195 -> gross = (200-195)*5 = 25
+    # prior close=100, first bar closes at 99 -> r0=-1% -> SHORT;
+    # last bar open=200, close=195 -> gross = (200-195)*5 = 25
     bars = [
-        _bar("2026-06-09T13:30:00", 100, 101, 99, 99),
+        DAY0,
+        _bar("2026-06-09T13:30:00", 100, 101, 98, 99),
         _bar("2026-06-09T20:00:00", 200, 201, 194, 195),
     ]
     result = run_backtest(
@@ -91,18 +98,20 @@ def test_zero_cost_short_trade_matches_hand_calc():
 
 def test_flat_signal_produces_no_trade():
     bars = [
-        _bar("2026-06-09T13:30:00", 100, 101, 99, 100),  # 0% -> FLAT
+        DAY0,
+        _bar("2026-06-09T13:30:00", 100, 101, 99, 100),  # r0 = 0% -> FLAT
         _bar("2026-06-09T20:00:00", 200, 201, 199, 202),
     ]
     result = run_backtest(
         bars, root="MES", instrument=_mes_spec(), costs_config=_zero_cost_config(), scenario="base"
     )
     assert result.n_trades == 0
-    assert result.n_days_with_data == 1  # day had data, just no trade
+    assert result.n_days_with_data == 1  # day had a signal, just FLAT -> no trade
 
 
 def test_costs_reduce_net_pnl_versus_gross():
     bars = [
+        DAY0,
         _bar("2026-06-09T13:30:00", 100, 101, 99, 101),
         _bar("2026-06-09T20:00:00", 200, 203, 199, 202),
     ]
@@ -116,6 +125,7 @@ def test_costs_reduce_net_pnl_versus_gross():
 
 def test_stress_scenario_costs_more_than_base():
     bars = [
+        DAY0,
         _bar("2026-06-09T13:30:00", 100, 101, 99, 101),
         _bar("2026-06-09T20:00:00", 200, 203, 199, 202),
     ]
@@ -135,12 +145,13 @@ def test_stress_scenario_costs_more_than_base():
 
 def test_multi_day_aggregate_metrics():
     bars = [
-        _bar("2026-06-09T13:30:00", 100, 101, 99, 101),  # LONG day: win
+        DAY0,  # prior close = 100
+        _bar("2026-06-09T13:30:00", 100, 101, 99, 101),  # r0=+1% -> LONG day: win
         _bar("2026-06-09T20:00:00", 200, 203, 199, 202),
-        _bar("2026-06-10T13:30:00", 100, 101, 99, 99),  # SHORT day: win (short + price down)
-        _bar("2026-06-10T20:00:00", 200, 201, 190, 195),
-        _bar("2026-06-11T13:30:00", 100, 101, 99, 101),  # LONG day: loss
-        _bar("2026-06-11T20:00:00", 200, 201, 190, 195),
+        _bar("2026-06-10T13:30:00", 100, 101, 99, 99),  # r0 vs day1 close(202) -> SHORT
+        _bar("2026-06-10T20:00:00", 200, 201, 190, 195),  # SHORT + price down: win
+        _bar("2026-06-11T13:30:00", 100, 101, 99, 195.5),  # r0 vs day2 close(195) -> LONG
+        _bar("2026-06-11T20:00:00", 200, 201, 190, 195),  # LONG + price down: loss
     ]
     result = run_backtest(
         bars, root="MES", instrument=_mes_spec(), costs_config=_zero_cost_config(), scenario="base"

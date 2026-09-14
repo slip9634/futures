@@ -1,0 +1,167 @@
+{
+  "captured_at_utc": "2026-09-14T04:10:48.691798+00:00",
+  "results": {
+    "MES_15min_base": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": -102.5,
+      "net_pnl": -156.62,
+      "win_rate": 0.3939,
+      "avg_trade_net": -4.75,
+      "naive_t_stat": -1.264270502556106
+    },
+    "MES_15min_conservative": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": -164.38,
+      "net_pnl": -218.49,
+      "win_rate": 0.3636,
+      "avg_trade_net": -6.62,
+      "naive_t_stat": -1.7637388804494711
+    },
+    "MES_15min_stress": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": -267.5,
+      "net_pnl": -321.62,
+      "win_rate": 0.2727,
+      "avg_trade_net": -9.75,
+      "naive_t_stat": -2.5961861769384145
+    },
+    "MES_30min_base": {
+      "n_trades": 65,
+      "n_days_with_data": 66,
+      "gross_pnl": -251.25,
+      "net_pnl": -357.85,
+      "win_rate": 0.3385,
+      "avg_trade_net": -5.51,
+      "naive_t_stat": -1.5455118627522404
+    },
+    "MES_30min_conservative": {
+      "n_trades": 65,
+      "n_days_with_data": 66,
+      "gross_pnl": -373.12,
+      "net_pnl": -479.72,
+      "win_rate": 0.3231,
+      "avg_trade_net": -7.38,
+      "naive_t_stat": -2.0718755857449174
+    },
+    "MES_30min_stress": {
+      "n_trades": 65,
+      "n_days_with_data": 66,
+      "gross_pnl": -576.25,
+      "net_pnl": -682.85,
+      "win_rate": 0.2769,
+      "avg_trade_net": -10.51,
+      "naive_t_stat": -2.949148457399379
+    },
+    "MGC_15min_base": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": 250.0,
+      "net_pnl": 195.88,
+      "win_rate": 0.6364,
+      "avg_trade_net": 5.94,
+      "naive_t_stat": 1.3498977400956451
+    },
+    "MGC_15min_conservative": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": 200.5,
+      "net_pnl": 146.38,
+      "win_rate": 0.5758,
+      "avg_trade_net": 4.44,
+      "naive_t_stat": 1.0087708351813154
+    },
+    "MGC_15min_stress": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": 118.0,
+      "net_pnl": 63.88,
+      "win_rate": 0.5152,
+      "avg_trade_net": 1.94,
+      "naive_t_stat": 0.44022599365571763
+    },
+    "MGC_30min_base": {
+      "n_trades": 66,
+      "n_days_with_data": 66,
+      "gross_pnl": -143.0,
+      "net_pnl": -251.24,
+      "win_rate": 0.4697,
+      "avg_trade_net": -3.81,
+      "naive_t_stat": -0.6252271585803477
+    },
+    "MGC_30min_conservative": {
+      "n_trades": 66,
+      "n_days_with_data": 66,
+      "gross_pnl": -242.0,
+      "net_pnl": -350.24,
+      "win_rate": 0.4697,
+      "avg_trade_net": -5.31,
+      "naive_t_stat": -0.8715951282471703
+    },
+    "MGC_30min_stress": {
+      "n_trades": 66,
+      "n_days_with_data": 66,
+      "gross_pnl": -407.0,
+      "net_pnl": -515.24,
+      "win_rate": 0.4242,
+      "avg_trade_net": -7.81,
+      "naive_t_stat": -1.2822084110268315
+    },
+    "MCL_15min_base": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": 176.0,
+      "net_pnl": 121.88,
+      "win_rate": 0.4848,
+      "avg_trade_net": 3.69,
+      "naive_t_stat": 0.6477654495875727
+    },
+    "MCL_15min_conservative": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": 126.5,
+      "net_pnl": 72.38,
+      "win_rate": 0.3939,
+      "avg_trade_net": 2.19,
+      "naive_t_stat": 0.384683813924627
+    },
+    "MCL_15min_stress": {
+      "n_trades": 33,
+      "n_days_with_data": 33,
+      "gross_pnl": 44.0,
+      "net_pnl": -10.12,
+      "win_rate": 0.3333,
+      "avg_trade_net": -0.31,
+      "naive_t_stat": -0.05378557884661708
+    },
+    "MCL_30min_base": {
+      "n_trades": 66,
+      "n_days_with_data": 66,
+      "gross_pnl": 22.0,
+      "net_pnl": -86.24,
+      "win_rate": 0.3636,
+      "avg_trade_net": -1.31,
+      "naive_t_stat": -0.37949183319336277
+    },
+    "MCL_30min_conservative": {
+      "n_trades": 66,
+      "n_days_with_data": 66,
+      "gross_pnl": -77.0,
+      "net_pnl": -185.24,
+      "win_rate": 0.3333,
+      "avg_trade_net": -2.81,
+      "naive_t_stat": -0.8151329682377895
+    },
+    "MCL_30min_stress": {
+      "n_trades": 66,
+      "n_days_with_data": 66,
+      "gross_pnl": -242.0,
+      "net_pnl": -350.24,
+      "win_rate": 0.2576,
+      "avg_trade_net": -5.31,
+      "naive_t_stat": -1.5412015266446184
+    }
+  }
+}
