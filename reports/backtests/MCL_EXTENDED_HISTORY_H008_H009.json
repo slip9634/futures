@@ -1,0 +1,135 @@
+{
+  "experiment_id": "MCL_EXTENDED_HISTORY_H008_H009_20260914",
+  "sample_period": "2023-10-23 to 2026-09-11 (712 bars, ~2.9 years)",
+  "note": "Re-run of H008/H009 (MCL only) on the full IBKR-available history instead of the original 199-day slice, per user request to test further back where possible.",
+  "h009_session_decomp_results": [
+    {
+      "leg": "overnight",
+      "scenario": "base",
+      "n_trades": 711,
+      "net_pnl": -3253.04,
+      "win_rate": 0.4993,
+      "naive_t_stat": -1.1491,
+      "buy_and_hold_net_pnl": 3046.36,
+      "ratio_to_benchmark": -1.0678
+    },
+    {
+      "leg": "overnight",
+      "scenario": "conservative",
+      "n_trades": 711,
+      "net_pnl": -4319.54,
+      "win_rate": 0.488,
+      "naive_t_stat": -1.5259,
+      "buy_and_hold_net_pnl": 3046.36,
+      "ratio_to_benchmark": -1.4179
+    },
+    {
+      "leg": "overnight",
+      "scenario": "stress",
+      "n_trades": 711,
+      "net_pnl": -6097.04,
+      "win_rate": 0.4796,
+      "naive_t_stat": -2.1538,
+      "buy_and_hold_net_pnl": 3046.36,
+      "ratio_to_benchmark": -2.0014
+    },
+    {
+      "leg": "intraday",
+      "scenario": "base",
+      "n_trades": 712,
+      "net_pnl": 1087.32,
+      "win_rate": 0.1404,
+      "naive_t_stat": 0.791,
+      "buy_and_hold_net_pnl": 3046.36,
+      "ratio_to_benchmark": 0.3569
+    },
+    {
+      "leg": "intraday",
+      "scenario": "conservative",
+      "n_trades": 712,
+      "net_pnl": 19.32,
+      "win_rate": 0.1334,
+      "naive_t_stat": 0.0141,
+      "buy_and_hold_net_pnl": 3046.36,
+      "ratio_to_benchmark": 0.0063
+    },
+    {
+      "leg": "intraday",
+      "scenario": "stress",
+      "n_trades": 712,
+      "net_pnl": -1760.68,
+      "win_rate": 0.1306,
+      "naive_t_stat": -1.2809,
+      "buy_and_hold_net_pnl": 3046.36,
+      "ratio_to_benchmark": -0.578
+    }
+  ],
+  "h009_quartile_split_sample_check_intraday_leg": [
+    {
+      "quarter": 1,
+      "start": "2023-10-23",
+      "end": "2024-07-18",
+      "n_trades": 178,
+      "net_pnl": -647.92,
+      "win_rate": 0.0,
+      "naive_t_stat": -4741218383703101.0
+    },
+    {
+      "quarter": 2,
+      "start": "2024-07-25",
+      "end": "2025-04-09",
+      "n_trades": 178,
+      "net_pnl": -636.92,
+      "win_rate": 0.0056,
+      "naive_t_stat": -30.8329
+    },
+    {
+      "quarter": 3,
+      "start": "2025-04-10",
+      "end": "2025-12-24",
+      "n_trades": 178,
+      "net_pnl": -797.92,
+      "win_rate": 0.0449,
+      "naive_t_stat": -4.2073
+    },
+    {
+      "quarter": 4,
+      "start": "2025-12-26",
+      "end": "2026-09-11",
+      "n_trades": 178,
+      "net_pnl": 3170.08,
+      "win_rate": 0.5112,
+      "naive_t_stat": 2.3643
+    }
+  ],
+  "h008_spread_mean_reversion_results": [
+    {
+      "scenario": "base",
+      "n_trades": 42,
+      "n_long_spread": 19,
+      "n_short_spread": 23,
+      "net_pnl": -385.76,
+      "win_rate": 0.2381,
+      "naive_t_stat": -1.1565
+    },
+    {
+      "scenario": "conservative",
+      "n_trades": 42,
+      "n_long_spread": 19,
+      "n_short_spread": 23,
+      "net_pnl": -511.76,
+      "win_rate": 0.2143,
+      "naive_t_stat": -1.5343
+    },
+    {
+      "scenario": "stress",
+      "n_trades": 42,
+      "n_long_spread": 19,
+      "n_short_spread": 23,
+      "net_pnl": -721.76,
+      "win_rate": 0.1429,
+      "naive_t_stat": -2.1639
+    }
+  ],
+  "captured_at_utc": "2026-09-14T06:12:15.250335Z"
+}
