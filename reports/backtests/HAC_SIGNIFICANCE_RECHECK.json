@@ -1,0 +1,45 @@
+{
+  "experiment_id": "HAC_SIGNIFICANCE_RECHECK_20260914",
+  "purpose": "Apply Newey-West HAC-adjusted t-stats (previously never computed in this project -- every prior naive_t_stat assumes i.i.d. observations) to the strongest still-standing result (H009 MCL intraday leg) and, for consistency, two other already-flagged-as-provisional cells rather than cherry-picking only the best one.",
+  "captured_at_utc": "2026-09-14T12:54:48.703856Z",
+  "results": [
+    {
+      "label": "H009 MCL intraday leg (base)",
+      "n": 199,
+      "mean_net_pnl": 16.38,
+      "naive_t_stat": 2.4258,
+      "newey_west_rule_of_thumb_lag": 4,
+      "hac_t_stats_by_lag": {
+        "1": 2.1895,
+        "4": 2.0621,
+        "5": 2.0274,
+        "10": 2.0149
+      }
+    },
+    {
+      "label": "H009 MGC overnight leg (base)",
+      "n": 447,
+      "mean_net_pnl": 45.09,
+      "naive_t_stat": 1.5905,
+      "newey_west_rule_of_thumb_lag": 5,
+      "hac_t_stats_by_lag": {
+        "1": 1.6268,
+        "5": 1.6164,
+        "10": 1.5688
+      }
+    },
+    {
+      "label": "H015 MES volume-shock 20d/non-overlapping (base)",
+      "n": 10,
+      "mean_net_pnl": 715.48,
+      "naive_t_stat": 2.5406,
+      "newey_west_rule_of_thumb_lag": 2,
+      "hac_t_stats_by_lag": {
+        "1": 3.2284,
+        "2": 3.5169,
+        "5": 3.8071,
+        "10": null
+      }
+    }
+  ]
+}
