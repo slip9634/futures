@@ -1,2 +1,27 @@
   rep 1/5 naive=  80 orient=  35 BH5=  0 (528s)
   rep 2/5 naive=  64 orient=  32 BH5=  0 (1061s)
+  rep 3/5 naive=  84 orient=  47 BH5=  0 (1568s)
+  rep 4/5 naive= 104 orient=  50 BH5=  0 (2027s)
+  rep 5/5 naive=  96 orient=  58 BH5=  0 (2494s)
+
+==============================================================================
+NULL: 50 INDEPENDENT RANDOM WALKS -> 1225 PAIRS, ZERO REAL RELATIONSHIPS
+==============================================================================
+  screening discipline                                     spurious pairs kept
+  1. NAIVE  min(p_AB,p_BA) < 0.05, no corrections             85.6  (max 104)
+  2. + orientation penalty (2x min p) < 0.05                  44.4  (max 58)
+  3. + Benjamini-Hochberg FDR 10%                              0.2  (max 1)
+  4. + Benjamini-Hochberg FDR 5%                               0.0  (max 0)
+  5. + Benjamini-Hochberg FDR 1%                               0.0  (max 0)
+  6. + significant half-life in 0.5-24h band                   0.0  (max 0)
+  7. + must re-pass in an independent window                   0.0  (max 0)
+==============================================================================
+
+  The naive screen keeps 86 'cointegrated' pairs out of 1225 when the
+  correct answer is ZERO. Each comes with a fitted hedge ratio, a stationary-
+  looking residual and, for a subset, a significant mean-reverting half-life in
+  a perfectly tradeable band -- everything a research process looks for.
+
+  Stacking the corrections drives it to 0.0. The decisive steps are the
+  FDR correction and the out-of-window survival requirement.
+

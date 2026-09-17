@@ -93,8 +93,11 @@ def main():
   looking residual and, for a subset, a significant mean-reverting half-life in
   a perfectly tradeable band -- everything a research process looks for.
 
-  Stacking the corrections drives it to {np.mean(acc['bh05_hl_surv']):.1f}. The decisive steps are the
-  FDR correction and the out-of-window survival requirement.
+  Stacking the corrections drives it to {np.mean(acc['bh05_hl_surv']):.1f}. The FDR correction does
+  essentially all of the work: by BH 5% the count is already zero, so the
+  half-life band and the survival requirement have nothing left to remove under
+  THIS null. They remain necessary against failure modes this null does not
+  simulate (structural breaks, regime-specific relationships, slow drift).
 """)
     with open(os.path.join(OUT, "null_naive_vs_corrected.json"), "w") as f:
         json.dump({"n_pairs": n_pairs, "reps": REPS, "results": res}, f, indent=2)

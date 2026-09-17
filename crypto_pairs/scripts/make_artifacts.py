@@ -123,12 +123,27 @@ if os.path.exists(fr):
         rob.append({"test": f"regime_hl{r.half_life_hours:g}h_sigma{r.sigma_S*100:g}pct",
                     "param": r.sigma_S, "net_return": r.net_return, "sharpe": r.sharpe,
                     "n_trades": r.n_trades, "data_source": "ENGINE_VERIFICATION"})
-for t in ("start_date_sensitivity", "formation_window_sensitivity",
-          "cointegration_window_sensitivity", "pair_universe_sensitivity",
-          "capital_size_sensitivity", "leverage_1.5x", "leverage_2.0x"):
-    rob.append({"test": t, "param": np.nan, "net_return": np.nan, "sharpe": np.nan,
-                "n_trades": np.nan, "data_source": BLOCKED})
-w_csv("robustness_results.csv", pd.DataFrame(rob))
+# Placeholders ONLY for tests nothing has actually produced. This script is
+# rerunnable, and scripts/robustness_extra.py writes real rows into the same
+# file, so we merge rather than overwrite: any test already present (from a
+# previous run of this script or from robustness_extra) is preserved, and a
+# BLOCKED placeholder is never allowed to replace a real measurement.
+rob_df = pd.DataFrame(rob)
+existing_path = os.path.join(RES, "robustness_results.csv")
+if os.path.exists(existing_path):
+    prev = pd.read_csv(existing_path)
+    real_prev = prev[prev["data_source"] != BLOCKED]
+    keep = real_prev[~real_prev["test"].isin(set(rob_df["test"]))]
+    rob_df = pd.concat([rob_df, keep], ignore_index=True)
+
+have = set(rob_df["test"])
+for t in ("formation_window_sensitivity", "cointegration_window_sensitivity",
+          "pair_universe_sensitivity", "randomized_trade_ordering"):
+    if t not in have:
+        rob_df = pd.concat([rob_df, pd.DataFrame([{
+            "test": t, "param": np.nan, "net_return": np.nan, "sharpe": np.nan,
+            "n_trades": np.nan, "data_source": BLOCKED}])], ignore_index=True)
+w_csv("robustness_results.csv", rob_df)
 
 # ------------------------------------------------------------------ checksums
 def sha_file(p):

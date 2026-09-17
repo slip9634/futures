@@ -5,3 +5,34 @@
   rep  5/10  pairs=1225  raw p<.05=  66  raw p<.01= 10  BH5%=  0  min p=1.17e-03  sig-HL pairs= 193  (307s)
   rep  6/10  pairs=1225  raw p<.05=  56  raw p<.01=  6  BH5%=  0  min p=9.06e-05  sig-HL pairs= 202  (764s)
   rep  7/10  pairs=1225  raw p<.05=  38  raw p<.01=  6  BH5%=  0  min p=3.17e-04  sig-HL pairs= 158  (1339s)
+  rep  8/10  pairs=1225  raw p<.05=  83  raw p<.01= 35  BH5%=  0  min p=7.67e-04  sig-HL pairs= 124  (1860s)
+  rep  9/10  pairs=1225  raw p<.05=  39  raw p<.01=  2  BH5%=  0  min p=5.66e-03  sig-HL pairs= 171  (2343s)
+  rep 10/10  pairs=1225  raw p<.05=  55  raw p<.01= 10  BH5%=  0  min p=6.87e-04  sig-HL pairs= 249  (2816s)
+
+==============================================================================
+NULL CALIBRATION RESULT -- 50 INDEPENDENT RANDOM WALKS, NO REAL PAIRS EXIST
+==============================================================================
+  pairs screened per window          : 1225
+  raw p < 0.05 'discoveries'         : 49.5 per window (range 10-83)
+  raw p < 0.01 'discoveries'         : 9.6 per window
+  after Benjamini-Hochberg at 5%     : 0.0 per window (max 0)
+  pairs with a STATISTICALLY significant
+    mean-reverting half-life         : 169.8 per window
+  null cointegration survival ratio  : nan
+    (fraction of window-1 BH discoveries that re-pass in window 2)
+==============================================================================
+
+  INTERPRETATION
+  Screening 1,225 pairs of PURE NOISE yields ~50 pairs at raw p<0.05.
+  Any research process that picks pairs on uncorrected p-values is therefore
+  guaranteed to produce a shortlist of spurious 'cointegrated' pairs, each with
+  a plausible-looking hedge ratio and, in ~170 cases per window, a
+  statistically significant mean-reverting half-life.
+
+  Benjamini-Hochberg at 5% cuts this to 0.0 per window: FDR control is
+  doing exactly what it should.
+
+  The null survival ratio of nan is the floor a real pair must
+  beat. A pair that re-passes cointegration in the next window only ~nan% of
+  the time has demonstrated NOTHING beyond chance.
+

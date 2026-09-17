@@ -1,0 +1,59 @@
+==============================================================================
+START-DATE SENSITIVITY (window slid across the sample)
+==============================================================================
+  start bar      0 (day    0.0)  net   -0.13%  Sharpe  -0.06  trades  39
+  start bar   5000 (day   17.4)  net   -1.29%  Sharpe  -0.94  trades  40
+  start bar  10000 (day   34.7)  net   -1.22%  Sharpe  -0.83  trades  36
+  start bar  15000 (day   52.1)  net   -3.03%  Sharpe  -1.97  trades  31
+  start bar  20000 (day   69.4)  net   -2.86%  Sharpe  -2.35  trades  30
+  start bar  25000 (day   86.8)  net   -4.62%  Sharpe  -3.34  trades  28
+  start bar  30000 (day  104.2)  net   -3.35%  Sharpe  -2.77  trades  29
+
+  across 7 start dates: mean -2.36%  sd 1.54%  positive 0/7
+
+==============================================================================
+PARAMETER PERTURBATION (+/-10% and +/-25% on each key value)
+==============================================================================
+  baseline                       net   -4.10%  Sharpe  -1.34
+  hedge_w  -25% ->      648   net   -7.44%  Sharpe  -2.63  trades  62
+  hedge_w  -10% ->      778   net   -7.28%  Sharpe  -2.33  trades  66
+  hedge_w  +10% ->      950   net   -5.11%  Sharpe  -1.80  trades  70
+  hedge_w  +25% ->     1080   net   -3.89%  Sharpe  -1.25  trades  69
+  z_w      -25% ->      648   net   -5.15%  Sharpe  -1.92  trades  88
+  z_w      -10% ->      778   net   -3.84%  Sharpe  -1.29  trades  81
+  z_w      +10% ->      950   net   -4.28%  Sharpe  -1.45  trades  63
+  z_w      +25% ->     1080   net   -2.37%  Sharpe  -0.86  trades  56
+  entry    -25% ->    1.875   net   -8.02%  Sharpe  -2.25  trades 111
+  entry    -10% ->     2.25   net   -7.12%  Sharpe  -2.09  trades  90
+  entry    +10% ->     2.75   net   -3.46%  Sharpe  -1.28  trades  50
+  entry    +25% ->    3.125   net   -0.17%  Sharpe  -0.07  trades  27
+  stop     -25% ->      3.0   net   -5.56%  Sharpe  -2.61  trades  70
+  stop     -10% ->      3.6   net   -5.26%  Sharpe  -1.99  trades  70
+  stop     +10% ->      4.4   net   -3.38%  Sharpe  -1.09  trades  70
+  stop     +25% ->      5.0   net   -1.63%  Sharpe  -0.53  trades  70
+  reset    -25% ->     0.75   net   -4.10%  Sharpe  -1.34  trades  70
+  reset    -10% ->      0.9   net   -4.10%  Sharpe  -1.34  trades  70
+  reset    +10% ->      1.1   net   -4.10%  Sharpe  -1.34  trades  70
+  reset    +25% ->     1.25   net   -4.10%  Sharpe  -1.34  trades  70
+  ts       -25% ->      648   net   -4.40%  Sharpe  -1.45  trades  70
+  ts       -10% ->      778   net   -4.10%  Sharpe  -1.34  trades  70
+  ts       +10% ->      950   net   -4.10%  Sharpe  -1.34  trades  70
+  ts       +25% ->     1080   net   -4.10%  Sharpe  -1.34  trades  70
+
+==============================================================================
+CAPITAL SIZE AND LEVERAGE
+==============================================================================
+  equity $    10,000   net   -4.10%  trades  70
+  equity $   100,000   net   -4.10%  trades  70
+  equity $ 1,000,000   net   -4.10%  trades  70
+  gross leverage 1.0x    net   -4.10%  maxDD  -6.99%  trades  70
+  gross leverage 1.5x    net   -6.13%  maxDD -10.34%  trades  70
+  gross leverage 2.0x    net   -6.49%  maxDD -11.48%  trades  62
+
+  READING: leverage scales BOTH the loss and the drawdown -- it cannot rescue a
+  negative expectancy, which is exactly why the mandate requires edge to exist
+  before leverage is applied. Capital size is near-neutral here because the
+  synthetic legs have negligible exchange filters; on real contracts the
+  smallest account would additionally hit min-notional and step-size rejections.
+
+robustness_results.csv now 76 rows

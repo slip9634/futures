@@ -1,0 +1,17 @@
+{
+  "n_pairs": 4000,
+  "bars": 17280,
+  "critical_values_residual": {
+    "1%": -3.9706920011033824,
+    "5%": -3.3620496374420377,
+    "10%": -3.087434955437571
+  },
+  "critical_values_observed": {
+    "1%": -3.4269150983222105,
+    "5%": -2.8774922920300723,
+    "10%": -2.588166538561119
+  },
+  "actual_size_of_minus286_on_residual": 0.1585,
+  "expected_false_positives_per_1225_old": 194.1625,
+  "expected_false_positives_per_1225_corrected": 61.25
+}

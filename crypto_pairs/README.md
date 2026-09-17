@@ -52,7 +52,7 @@ See [`final_research_report.md`](final_research_report.md).
 
 ---
 
-## The three findings that do not depend on market data
+## The four findings that do not depend on market data
 
 **1. A drawdown below −100% is arithmetically impossible under limited
 liability.** `MaxDD = min(E_t/P_t) − 1 = −1.32` implies `E_t = −0.32·P_t < 0`.
@@ -70,6 +70,14 @@ strategy must earn a **gross Sharpe of ~5.6**.
 unobtainable in real markets — only 24 of 216 parameter configurations were
 profitable after realistic costs**, the best one's Deflated Sharpe was **0.010**,
 and the rule did not beat a random-entry placebo.
+
+**4. Screening 1,225 pairs of pure noise, a naive screen keeps ~86 "cointegrated"
+pairs when the correct answer is zero.** Benjamini-Hochberg drives that to 0.0 —
+the FDR step does essentially all the work, so skipping it is the most costly
+shortcut available here. That same null run also caught a **real defect in this
+project's own code**: the half-life significance test was using observed-series
+Dickey-Fuller critical values on a *fitted* residual, giving an actual size of
+15.8% against a nominal 5%. Measured, corrected (−2.86 → −3.36), regression-tested.
 
 ---
 

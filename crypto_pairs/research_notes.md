@@ -121,9 +121,34 @@ roughly 700–2,400 bars on 5,000-bar samples, with `b < 0` in ~95% of draws. A
 validity check on the **sign** of `b` is close to useless as a filter.
 
 The implementation therefore also returns `b_tstat` and tests it against the
-**Dickey–Fuller** τ distribution (5% critical value −2.86), not the normal
-(−1.645), which would over-reject badly. Selection requires
-`significant=True` **and** a half-life inside the configured band.
+**Dickey–Fuller** τ distribution, not the normal (−1.645), which would
+over-reject badly. Selection requires `significant=True` **and** a half-life
+inside the configured band.
+
+**A second trap, which the null calibration caught in this project's own code.**
+The DF critical values (−2.86 at 5%) are correct for an *observed* series but
+**wrong for a fitted residual** `S = log P1 − α̂ − β̂·log P2`, because α and β were
+estimated from the same data: OLS deliberately minimises that residual, so it
+looks more stationary than it is. This is the same error the project already
+avoids for Engle–Granger p-values, and the half-life filter still committed a
+milder version of it — it flagged **170 of 1,225 pure-noise pairs per window**
+as significantly mean-reverting at a nominal 5% level.
+
+`scripts/halflife_critical_values.py` measures the correct values under this
+project's own null (4,000 independent random-walk pairs, 17,280 bars):
+
+| level | observed series | fitted residual |
+|---:|---:|---:|
+| 1% | −3.427 | **−3.971** |
+| 5% | −2.877 | **−3.362** |
+| 10% | −2.588 | **−3.087** |
+
+The observed column reproduces the published DF table, validating the method;
+the residual column reproduces MacKinnon's Engle–Granger value for two
+variables with a constant (≈ −3.34), validating the correction. The old
+threshold had a measured actual size of **15.8%** against a nominal 5%.
+`DF_TAU_CRIT_RESIDUAL` is now the default. Post-fix: false-positive rate
+**12.5% → 4.5%**, power retained. Two regression tests lock it in.
 
 ### 2.5 Z-score
 
@@ -258,9 +283,29 @@ carried as an explicit grid to be selected inside training data.
 
 50 **independent random walks** at realistic 5-minute crypto volatility, 60-day
 windows (17,280 bars), all 1,225 pairs screened. **No cointegration exists by
-construction.** See `results/null_calibration.json` and
-`results/null_naive_vs_corrected.json`; numbers are reproduced in
-`final_research_report.md`.
+construction, so every discovery is false.** 10 replications
+(`results/null_calibration.json`) plus a 5-replication discipline ladder
+(`results/null_naive_vs_corrected.json`):
+
+| screening discipline | spurious pairs kept, of 1,225 |
+|---|---:|
+| NAIVE `min(p_AB, p_BA) < 0.05`, no corrections | **85.6** (max 104) |
+| + orientation penalty (2× min p) | 44.4 |
+| + Benjamini–Hochberg FDR 10% | 0.2 |
+| + Benjamini–Hochberg FDR 5% | **0.0** |
+| + half-life band, + out-of-window survival | 0.0 |
+
+**The FDR step does essentially all the work.** By BH 5% the count is already
+zero, so the later filters have nothing left to remove *under this null* — they
+remain necessary against failure modes this null does not simulate (structural
+breaks, regime-specific relationships, slow drift). The practical conclusion is
+that **skipping the FDR correction is the single most costly methodological
+shortcut available** in this design.
+
+The null cointegration **survival ratio was not estimable**: BH at 5% produced
+zero discoveries in all 10 windows, so nothing existed whose survival could be
+measured. That is itself the result — a correctly corrected screen does not
+hand you spurious pairs to re-test.
 
 ### 4.2 The cost hurdle
 

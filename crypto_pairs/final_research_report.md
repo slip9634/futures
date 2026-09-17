@@ -3,7 +3,7 @@
 **Market:** Binance USDⓈ-M perpetual futures · **Frequency:** 5-minute bars  
 **Strategy family:** cointegration / spread mean reversion  
 **Date:** 2026-09-17 (UTC)  
-**Code commit:** `53d347c9036b` · **config sha256:** `0862a9fe0cc6f6e6…` · **source sha256:** `01b52a22e649cc51…`
+**Code commit:** `9312a04bb3e5` · **config sha256:** `0862a9fe0cc6f6e6…` · **source sha256:** `5f818e903aeec0b4…`
 
 ---
 
@@ -132,7 +132,56 @@ Minimum track record length for PSR to reach 95% confidence at this Sharpe: **34
 
 `NULL CALIBRATION` · 50 **independent random walks** at realistic 5-minute crypto volatility, 60-day windows (17,280 bars), all 1,225 pairs screened. **No cointegration exists by construction, so every discovery is false.**
 
-*UNAVAILABLE — DATA EGRESS BLOCKED — null calibration did not complete in this run.*
+Replications: 10 · ADF lag fixed at 12 (1 hour) for tractability, applied identically to any real screen.
+
+| screen | false discoveries per window (of 1,225) |
+|---|---:|
+| raw p < 0.05 (with the 2× orientation penalty applied) | **49.5** |
+| raw p < 0.01 | 9.6 |
+| Benjamini-Hochberg FDR 5% | **0.0** (max 0) |
+| pairs with a *statistically significant* mean-reverting half-life | **169.8** |
+
+**Null cointegration survival ratio: not estimable — and that is the result.** Benjamini-Hochberg at 5% produced **zero** discoveries in all 10 windows, so there was nothing whose survival could be measured. The survival benchmark is therefore vacuous under correct FDR control: a properly corrected screen simply does not hand you spurious pairs to re-test. It becomes a meaningful diagnostic only for screens that skip the correction — which is exactly the regime the previous experiment appears to have been in.
+
+### 4.1 What screening discipline costs, and what it buys
+
+Same null, 5 replications, reporting the ladder of disciplines a practitioner might actually use:
+
+| screening discipline | spurious pairs kept (of 1,225) |
+|---|---:|
+| 1. NAIVE — `min(p_AB, p_BA) < 0.05`, no corrections | **85.6** (max 104) |
+| 2. + orientation penalty (2× min p) < 0.05 | **44.4** (max 58) |
+| 3. + Benjamini-Hochberg FDR 10% | **0.2** (max 1) |
+| 4. + Benjamini-Hochberg FDR 5% | **0.0** (max 0) |
+| 5. + Benjamini-Hochberg FDR 1% | **0.0** (max 0) |
+| 6. + significant half-life in a 0.5–24 h band | **0.0** (max 0) |
+| 7. + must re-pass in an independent window | **0.0** (max 0) |
+
+The naive screen keeps **86** 'cointegrated' pairs when the correct answer is **zero** — each with a fitted hedge ratio, a stationary-looking residual, and for many a significant mean-reverting half-life in a perfectly tradeable band. Stacking the corrections drives it to **0.0**.
+
+**The FDR correction does essentially all of the work.** Going from the orientation penalty (44.4) to BH at 10% (0.2) removes virtually every false discovery; by BH 5% the count is already zero, so the half-life band and the out-of-window survival requirement have nothing left to remove **under this null**. That is not an argument for dropping them — they exist to catch pairs that pass a p-value test for reasons other than chance (structural breaks, regime-specific relationships, slow drift), which this null does not simulate. It is an argument that **skipping the FDR step is the single most costly methodological shortcut available** in this design.
+
+### 4.2 The null calibration caught a real defect in this project's own code
+
+The run flagged **170 of 1,225 pure-noise pairs per window** as having a *statistically significant* mean-reverting half-life — at a nominal 5% test level. That is a three-fold over-rejection, and it was a bug here, not a curiosity.
+
+**Cause.** `half_life()` tested `b < 0` against the Dickey-Fuller critical value −2.86. Those values are correct for an **observed** series. They are wrong for a spread `S = log P1 − α̂ − β̂·log P2`, because α and β were **estimated from the same data** — OLS deliberately minimises that residual, so it looks more stationary than it is. This is the identical error the project already avoids for Engle-Granger p-values; the half-life filter still committed a milder version of it.
+
+**Measured correction** (`scripts/halflife_critical_values.py`, 4,000 independent random-walk pairs of 17,280 bars):
+
+| level | observed series | fitted residual |
+|---:|---:|---:|
+| 1% | -3.427 | **-3.971** |
+| 5% | -2.877 | **-3.362** |
+| 10% | -2.588 | **-3.087** |
+
+The observed-series column reproduces the published Dickey-Fuller table (−3.43 / −2.86 / −2.57), which validates the method. The residual column reproduces MacKinnon's Engle-Granger critical value for two variables with a constant (≈ −3.34), which validates the correction.
+
+**Actual size of the old threshold on residuals: 15.8%**, against a nominal 5% — ≈ 194 spurious 'mean-reverting' pairs per 1,225 instead of 61.
+
+**Fixed.** `DF_TAU_CRIT_RESIDUAL` is now applied by default, since in this project the half-life is essentially always taken on a fitted spread. Post-fix measurement: false-positive rate **12.5% → 4.5%** on residuals, with power retained on genuinely cointegrated pairs. Two regression tests lock it in.
+
+> This is the clearest argument for running null calibration at all. The defect was invisible to every unit test — the code computed exactly what it claimed to compute — and it would have silently inflated the apparent quality of any real pair shortlist by a factor of three. It was found only by asking the machinery to analyse data with a known answer of *nothing*.
 
 > **Implication for the previous experiment.** If pairs were selected on uncorrected p-values, some of the shortlist was spurious by construction. This does not prove BTC-DOGE was one of them — it establishes the base rate that any such shortlist must be judged against.
 
@@ -378,7 +427,7 @@ These are the **frozen specification** in `config.yaml`. They are frozen on *met
 | Formation window | 60d primary; 30/90d grid | mandate schedules A/B/C; not tuned |
 | Correlation criterion | Pearson on 5m **log returns** ≥ 0.60 (grid 0.50–0.80) | screen only, never an entry condition; raw-price correlation reported but never used |
 | EG criterion | both orientations, MacKinnon p, **2× Bonferroni** within pair | taking the better of two orientations is itself a multiple comparison |
-| FDR | Benjamini-Hochberg 5% (grid 1%/10%) | null calibration shows a naive screen keeps ~80 spurious pairs of 1,225 |
+| FDR | Benjamini-Hochberg 5% (grid 1%/10%) | null calibration shows a naive screen keeps ~86 spurious pairs of 1,225 |
 | ADF criterion | residual ADF as diagnostic **only**, never as a p-value | standard ADF p-values are invalid on an estimated cointegrating vector |
 | Half-life | Dickey-Fuller significant **and** inside 0.5–24 h | sign of b alone accepts random walks ~95% of the time |
 | Hedge model | rolling OLS (static & Kalman as challengers) | complex models must beat simple ones out of sample; none has been given the chance |
@@ -484,10 +533,12 @@ Costs are not a haircut on this strategy. **They are the strategy's dominant ter
 
 | Test | Result |
 |---|---|
+| Multiple testing (null) | A naive screen keeps **86** of 1,225 pairs when the true answer is **zero**. BH-FDR + out-of-window survival drives it to **0.0**. |
 | Deflated Sharpe (validation demo) | **0.0103** for the best of 216 trials, against a 0.95 bar. **Fails.** |
 | Deflated Sharpe (reported BTC-DOGE 5.6) | falls **below 0.55** at 133 trials with realistic cross-trial dispersion. |
 | PBO (CSCV) | **0.389**; P(OOS loss \| IS-best) = **0.70**; IS→OOS slope **-1.36** (negative). |
 | Parameter plateau | **FAIL** — profitable cells are isolated, not a neighbourhood. |
+| Half-life filter size (self-audit) | **15.8%** actual vs 5% nominal before correction; **4.5%** after. Defect found by null calibration, fixed, regression-tested. |
 | Placebo | p = **0.25**. Beats broken-pair and shifted-signal controls; **does not beat random entries**. |
 | Bootstrap | Stationary bootstrap CI on the best Sharpe spans zero. |
 | CPCV | Implemented as CSCV; full CPCV not run (no market data to run it on). |
@@ -565,9 +616,9 @@ data date range   : UNAVAILABLE — DATA EGRESS BLOCKED
 symbols           : none obtained
 row counts        : 0 (no market data)
 data hashes       : none
-git commit        : 53d347c9036ba5f15191a93ff8f87641e724791c
+git commit        : 9312a04bb3e5a51f0158654b06b21ea18997c66c
 config sha256     : 0862a9fe0cc6f6e6c8f567fd61c1ed89c68297f5d6e1cfea45ca3a06d78540dc
-source tree sha256: 01b52a22e649cc51976b77333924a28a34b6a08c64cb0030b2f83f3e47ebe225
+source tree sha256: 5f818e903aeec0b4e02b7ce5742f1dab79275e755403228408fb3b82b41e17da
 ```
 
 Result-file hashes are in `results/comparison_checksums.json`. An independent agent reconciling against this run should compare the **source tree hash** and the analytic findings in §3 and §5, which are reproducible without any data. Anything requiring market data cannot be reconciled until egress is restored.

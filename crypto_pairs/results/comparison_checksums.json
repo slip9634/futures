@@ -1,5 +1,5 @@
 {
-  "git_commit": "53d347c9036ba5f15191a93ff8f87641e724791c",
+  "git_commit": "9312a04bb3e5a51f0158654b06b21ea18997c66c",
   "config_sha256": "0862a9fe0cc6f6e6c8f567fd61c1ed89c68297f5d6e1cfea45ca3a06d78540dc",
   "market_data": {
     "status": "UNAVAILABLE_EGRESS_BLOCKED",
@@ -11,8 +11,12 @@
   },
   "result_files": {
     "cointegration_results.parquet": {
-      "sha256": "488cb0823fc22e14f72fdff3c0ca48fb1d6e58e4a75de2f397df40a464ea9d1b",
-      "bytes": 2797
+      "sha256": "c5f1da920b140e81be14a68f9dc307bade56efe011ab4715fc5751ac710ce243",
+      "bytes": 8475
+    },
+    "comparison_checksums.json": {
+      "sha256": "7948781d1c2534f76517ab1ffc19d0b19d9e467be05ff49d63605b7f9bad4eff",
+      "bytes": 4597
     },
     "cost_hurdle.json": {
       "sha256": "43f441f267f78071c024dc98d6d65fcd9df2cd74cf6d8d141caf6309fe5878ae",
@@ -50,13 +54,25 @@
       "sha256": "2d5b405440bffc527dadcc96afabd03d4ae70e9ca4cbeb885d557ef524c7b813",
       "bytes": 2890
     },
+    "halflife_critical_values.json": {
+      "sha256": "92ea229f6d011dafefd5eeeb4965c009341ba34bc9ee977a993980fce6ecdbf7",
+      "bytes": 454
+    },
+    "null_calibration.json": {
+      "sha256": "88ff89ad9d9f97bdfa439334e16db42f57ee7639ddff8177b9fb3d092149a176",
+      "bytes": 3075
+    },
     "null_calibration_output.txt": {
-      "sha256": "f437f484e62957f742a6d0d8cef95091e5d03afe037b38b13e5025ec56c9c981",
-      "bytes": 647
+      "sha256": "df894b351b2b916f859f5e45fc9d5cad87d192a739b18572a5577f9f0b943a9a",
+      "bytes": 2496
     },
     "null_naive_output.txt": {
-      "sha256": "44b226dbe84252dcd1360e1cba6bf6c6e70d450af1573102eb5823e4416a7e57",
-      "bytes": 48
+      "sha256": "f312c60899bb4aed5da1733b9d4b6e8e97a021c156da331b8a6bf3f8e2a99c42",
+      "bytes": 1606
+    },
+    "null_naive_vs_corrected.json": {
+      "sha256": "1ba3b5d723234f717f21dacf3bef006039d98546c68eaf78c556c6a74ffe87a6",
+      "bytes": 1028
     },
     "pair_results.csv": {
       "sha256": "4cdff9dd28ccd9bb6cb6e8899e49a2136c55fcc5056d6fb00ed7a3ec03fcc279",
@@ -74,9 +90,13 @@
       "sha256": "3c87bd8eb5a068973104ab5c778ea38158c296537dba0cbf7d022b0008a64333",
       "bytes": 1367
     },
+    "robustness_extra_output.txt": {
+      "sha256": "059f09b369bd9aa4984a67cd815d68265e266cfebef7b49040c994319acd1a65",
+      "bytes": 3696
+    },
     "robustness_results.csv": {
-      "sha256": "b85353ac792129d01fc0a8ee66275314891f3fe3976317f3e91565f65307b6e9",
-      "bytes": 3598
+      "sha256": "b44b3f3e45db97d3cb469fd84fd45501ccdbc2c679b31c9d5003882a6ac7adbc",
+      "bytes": 6736
     },
     "trade_log.parquet": {
       "sha256": "331150aa8fc6c7d313e53b5e7f029cc774028e01da3f9a49272cfc2637b2f71b",
@@ -103,5 +123,5 @@
       "bytes": 609
     }
   },
-  "source_tree_sha256": "01b52a22e649cc51976b77333924a28a34b6a08c64cb0030b2f83f3e47ebe225"
+  "source_tree_sha256": "5f818e903aeec0b4e02b7ce5742f1dab79275e755403228408fb3b82b41e17da"
 }

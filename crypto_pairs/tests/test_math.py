@@ -196,3 +196,51 @@ def test_dsr_below_psr_when_many_trials():
     d = deflated_sharpe(st["sr"], st["n"], 500, (0.5 / np.sqrt(365)) ** 2,
                         st["skew"], st["kurtosis"])
     assert d["dsr"] <= plain
+
+
+# ------------------------------- half-life critical values on FITTED residuals
+def test_halflife_uses_stricter_critvals_on_residuals_by_default():
+    from crypto_pairs.statistics.halflife import DF_TAU_CRIT, DF_TAU_CRIT_RESIDUAL
+    assert DF_TAU_CRIT_RESIDUAL[0.05] < DF_TAU_CRIT[0.05]
+    rng = np.random.default_rng(21)
+    s = np.cumsum(rng.normal(0, 0.01, 4000))
+    assert half_life(s)["residual_critvals"] is True          # default
+    assert half_life(s, residual=False)["crit_value"] == DF_TAU_CRIT[0.05]
+    assert half_life(s, residual=True)["crit_value"] == DF_TAU_CRIT_RESIDUAL[0.05]
+
+
+def test_halflife_size_on_fitted_residuals_is_near_nominal():
+    """The regression-fitted spread must not over-reject.
+
+    Regression test for a defect this project's own null calibration exposed:
+    with the observed-series critical value (-2.86) the actual false-positive
+    rate on an OLS residual was ~13-16%, not 5%. Locks in the correction.
+    """
+    from crypto_pairs.statistics.hedge import ols_hedge
+    rng = np.random.default_rng(99)
+    n_sig_new = n_sig_old = 0
+    trials = 120
+    for _ in range(trials):
+        a = np.cumsum(rng.normal(0, 0.0025, 6000))
+        b = np.cumsum(rng.normal(0, 0.0025, 6000))
+        al, be = ols_hedge(a, b)
+        h = half_life(a - al - be * b)          # residual=True by default
+        n_sig_new += bool(h["significant"])
+        n_sig_old += bool(np.isfinite(h["b_tstat"]) and h["b_tstat"] < -2.86)
+    assert n_sig_new / trials < 0.10, f"size too high: {n_sig_new}/{trials}"
+    assert n_sig_old >= n_sig_new, "corrected test must be no more permissive"
+
+
+def test_halflife_retains_power_on_a_true_cointegrated_pair():
+    from crypto_pairs.statistics.hedge import ols_hedge
+    rng = np.random.default_rng(33)
+    hits = 0
+    for _ in range(20):
+        x = np.cumsum(rng.normal(0, 0.0025, 8000)) + 10
+        s = np.zeros(8000)
+        for t in range(1, 8000):
+            s[t] = 0.99 * s[t - 1] + rng.normal(0, 0.002)
+        y = 0.5 + 1.3 * x + s
+        al, be = ols_hedge(y, x)
+        hits += bool(half_life(y - al - be * x)["significant"])
+    assert hits >= 18, f"lost too much power: {hits}/20"
