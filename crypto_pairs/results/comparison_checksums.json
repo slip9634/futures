@@ -1,0 +1,107 @@
+{
+  "git_commit": "53d347c9036ba5f15191a93ff8f87641e724791c",
+  "config_sha256": "0862a9fe0cc6f6e6c8f567fd61c1ed89c68297f5d6e1cfea45ca3a06d78540dc",
+  "market_data": {
+    "status": "UNAVAILABLE_EGRESS_BLOCKED",
+    "symbols": [],
+    "row_counts": {},
+    "date_range": null,
+    "hashes": {},
+    "note": "All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt."
+  },
+  "result_files": {
+    "cointegration_results.parquet": {
+      "sha256": "488cb0823fc22e14f72fdff3c0ca48fb1d6e58e4a75de2f397df40a464ea9d1b",
+      "bytes": 2797
+    },
+    "cost_hurdle.json": {
+      "sha256": "43f441f267f78071c024dc98d6d65fcd9df2cd74cf6d8d141caf6309fe5878ae",
+      "bytes": 4880
+    },
+    "cost_hurdle_output.txt": {
+      "sha256": "387cdf5e673d18a7068a84dcc017508275a0f263533fb417b6ccd4f1448194fa",
+      "bytes": 8418
+    },
+    "cost_stress_results.csv": {
+      "sha256": "b4d7e8840c64f1e4b38551a95a26fec32a2d785d547eb35eef9578104063c69b",
+      "bytes": 931
+    },
+    "data_manifest.csv": {
+      "sha256": "f6ec7d53533d72bdbe8321352cd057e22de87bbe216eed7a2f8c1bd0021445b5",
+      "bytes": 3754
+    },
+    "experiment_registry.parquet": {
+      "sha256": "7a79dbbf490fe2feb266d48cd84767d936e9ee7698957ef31bc3c8e881b74e04",
+      "bytes": 36343
+    },
+    "feasible_region.csv": {
+      "sha256": "e511e292186067e0828b31bba00f3598b668a69c8fead15b37d0d53fb8cbcdab",
+      "bytes": 4782
+    },
+    "feasible_region_output.txt": {
+      "sha256": "fed01799d8559b8027099ae3c8a364fe34a2852d4163bcda919d0b1c60601a36",
+      "bytes": 6303
+    },
+    "forensics_output.txt": {
+      "sha256": "33e3632b30dd7a6f91e7949e94aedd16ea444c78aba51ef2f13ead6a3a34c16e",
+      "bytes": 8503
+    },
+    "forensics_reported_results.json": {
+      "sha256": "2d5b405440bffc527dadcc96afabd03d4ae70e9ca4cbeb885d557ef524c7b813",
+      "bytes": 2890
+    },
+    "null_calibration_output.txt": {
+      "sha256": "f437f484e62957f742a6d0d8cef95091e5d03afe037b38b13e5025ec56c9c981",
+      "bytes": 647
+    },
+    "null_naive_output.txt": {
+      "sha256": "44b226dbe84252dcd1360e1cba6bf6c6e70d450af1573102eb5823e4416a7e57",
+      "bytes": 48
+    },
+    "pair_results.csv": {
+      "sha256": "4cdff9dd28ccd9bb6cb6e8899e49a2136c55fcc5056d6fb00ed7a3ec03fcc279",
+      "bytes": 1195
+    },
+    "pair_screen_results.parquet": {
+      "sha256": "62c4877412388b56c5edf67981985d0bf125074d74d11a7f0ab58e6c8f3e83ac",
+      "bytes": 8469
+    },
+    "placebo_results.csv": {
+      "sha256": "12476bcf1752fd8d9754a10d94648e0e9b650742e46c73952a87a4b7c16b6e0a",
+      "bytes": 2380
+    },
+    "portfolio_results.csv": {
+      "sha256": "3c87bd8eb5a068973104ab5c778ea38158c296537dba0cbf7d022b0008a64333",
+      "bytes": 1367
+    },
+    "robustness_results.csv": {
+      "sha256": "b85353ac792129d01fc0a8ee66275314891f3fe3976317f3e91565f65307b6e9",
+      "bytes": 3598
+    },
+    "trade_log.parquet": {
+      "sha256": "331150aa8fc6c7d313e53b5e7f029cc774028e01da3f9a49272cfc2637b2f71b",
+      "bytes": 31564
+    },
+    "universe_history.parquet": {
+      "sha256": "64fbf6a9932e51647cfae8cb51490df53316028eb13746c07042327e62ab9763",
+      "bytes": 6432
+    },
+    "validation_demo_output.txt": {
+      "sha256": "1b2494e1136be0789af1089c69837114fcc69bd7e67f5dbf7e0e344c5a56684d",
+      "bytes": 5437
+    },
+    "validation_demo_summary.json": {
+      "sha256": "c3824ddbae5291e04c29343d9d6102574fc1cbdb2c81a7ee8cd03a9fce662233",
+      "bytes": 1213
+    },
+    "walk_forward_results.csv": {
+      "sha256": "d7e1e1bb3891ebf828b052b6c919bd212c391bfae7abb7b0445f67ddf9cf60d1",
+      "bytes": 664
+    },
+    "zscore_distribution.csv": {
+      "sha256": "595ac7e2992ae19f3c11b9db6baf0d4899315b2263a3dc73a5600e854049c386",
+      "bytes": 609
+    }
+  },
+  "source_tree_sha256": "01b52a22e649cc51976b77333924a28a34b6a08c64cb0030b2f83f3e47ebe225"
+}

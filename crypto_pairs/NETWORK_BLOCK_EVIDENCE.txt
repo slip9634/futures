@@ -1,0 +1,66 @@
+NETWORK EGRESS BLOCK — EVIDENCE LOG
+Captured: 2026-09-17, session container, Linux 6.18.44-fc-v33
+Proxy: local agent proxy -> policy-enforcing egress gateway
+
+RESULT: every cryptocurrency market-data host is denied by organization
+egress policy (gateway answers 403 to CONNECT). Verified via three
+independent client paths: curl, WebFetch tool, MCP connector.
+
+--- curl probe (https:// GET /, 12s timeout) ---
+data.binance.vision           rc=56 connect_rejected (403 CONNECT)
+api.binance.com               rc=56 connect_rejected
+api1.binance.com              rc=56 connect_rejected
+fapi.binance.com              rc=56 connect_rejected   <-- USDS-M futures REST
+dapi.binance.com              rc=56 connect_rejected
+www.binance.com               rc=56 connect_rejected
+api.bybit.com                 rc=56 connect_rejected
+public.bybit.com              rc=56 connect_rejected
+api.okx.com                   rc=56 connect_rejected
+api.kraken.com                rc=56 connect_rejected
+api.exchange.coinbase.com     rc=56 connect_rejected
+api.pro.coinbase.com          rc=56 connect_rejected
+api.kucoin.com                rc=56 connect_rejected
+api.gateio.ws                 rc=56 connect_rejected
+api.mexc.com                  rc=56 connect_rejected
+www.deribit.com               rc=56 connect_rejected
+api.coingecko.com             rc=56 connect_rejected
+api.coincap.io                rc=56 connect_rejected
+min-api.cryptocompare.com     rc=56 connect_rejected
+www.cryptodatadownload.com    rc=56 connect_rejected
+huggingface.co                rc=56 connect_rejected
+query1.finance.yahoo.com      rc=56 connect_rejected
+api.tiingo.com                rc=56 connect_rejected
+stooq.com                     rc=56 connect_rejected
+
+--- reachable hosts (for contrast; none serve Binance perp data) ---
+pypi.org                      200   (package index only)
+files.pythonhosted.org        (noProxy)  (package wheels only)
+api.github.com                200
+raw.githubusercontent.com     301
+
+--- WebFetch tool ---
+https://data.binance.vision/?prefix=data/futures/um/daily/klines/BTCUSDT/5m/
+  -> {"error_type":"EGRESS_BLOCKED","domain":"data.binance.vision"}
+https://developers.binance.com/docs/derivatives/usds-margined-futures/general-info
+  -> {"error_type":"EGRESS_BLOCKED","domain":"developers.binance.com"}
+
+--- agent proxy status endpoint, recentRelayFailures ---
+{"ts":"2026-09-17T21:19:30.062Z","kind":"connect_rejected",
+ "detail":"gateway answered 403 to CONNECT (policy denial or upstream failure)",
+ "host":"data.binance.vision:443"}
+{"ts":"2026-09-17T21:19:30.387Z","kind":"connect_rejected",
+ "detail":"gateway answered 403 to CONNECT (policy denial or upstream failure)",
+ "host":"fapi.binance.com:443"}
+
+--- IBKR MCP connector (only reachable market-data channel) ---
+search_contracts("DOGE") -> Coinbase Derivatives (COINDERIV) "DOP" Dogecoin
+  Perp Style Futures; search_contracts("PEPE") -> "PEP" 1k Pepe Perp Style Fut.
+get_price_history(contract_id=897527000, FUT, FIVE_MINS, ONE_WEEK)
+  -> {"error":"Details currently unavailable..."}  (no bars returned)
+NOT USED regardless: different exchange, different funding mechanism,
+insufficient history depth, and PART 3 of the mandate forbids exchange
+substitution.
+
+NOT ATTEMPTED BY CHOICE: data.binance.vision is an S3-backed bucket and
+s3.amazonaws.com is reachable (307). Reaching the same denied content via an
+S3 alias would circumvent an explicit organization egress denial. Not done.

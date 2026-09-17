@@ -1,0 +1,6 @@
+pair,corr,eg_p,bh_q,adf,kpss_p,half_life_hours,beta_stability_cv,oos_trades,oos_return,oos_sharpe,max_dd,costs,status,data_source,note
+BTCUSDT-DOGEUSDT,,,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+NEIROUSDT-1000PEPEUSDT,,,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+1000PEPEUSDT-WIFUSDT,,,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+NEIROUSDT-WIFUSDT,,,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+BTCUSDT-1000PEPEUSDT,,,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.

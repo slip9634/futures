@@ -1,0 +1,6 @@
+model,period,net_return,daily_sharpe,max_dd,trades,win_pct,profit_factor,fees,funding,slippage,dsr,status,data_source,note
+baseline_EG_rollingOLS_Z,development 2022-01-01..2024-12-31,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+baseline_EG_rollingOLS_Z,validation 2025-01-01..2025-12-31,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+baseline_EG_rollingOLS_Z,locked_test 2026-01-01..2026-06-30,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+baseline_EG_rollingOLS_Z,CONTAMINATED DIAGNOSTIC 2026-07-19..2026-09-16,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+baseline_EG_rollingOLS_Z,full walk-forward,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.

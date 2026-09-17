@@ -1,0 +1,19 @@
+symbol,dataset,source,interval,start,end,rows,missing_bars,checksum,downloaded_at,status,note
+BTCUSDT,klines,binance_vision/fapi,5m,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+BTCUSDT,fundingRate,binance_vision/fapi,8h,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+BTCUSDT,exchangeInfo,binance_vision/fapi,n/a,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+DOGEUSDT,klines,binance_vision/fapi,5m,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+DOGEUSDT,fundingRate,binance_vision/fapi,8h,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+DOGEUSDT,exchangeInfo,binance_vision/fapi,n/a,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+1000PEPEUSDT,klines,binance_vision/fapi,5m,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+1000PEPEUSDT,fundingRate,binance_vision/fapi,8h,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+1000PEPEUSDT,exchangeInfo,binance_vision/fapi,n/a,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+NEIROUSDT,klines,binance_vision/fapi,5m,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+NEIROUSDT,fundingRate,binance_vision/fapi,8h,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+NEIROUSDT,exchangeInfo,binance_vision/fapi,n/a,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+WIFUSDT,klines,binance_vision/fapi,5m,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+WIFUSDT,fundingRate,binance_vision/fapi,8h,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+WIFUSDT,exchangeInfo,binance_vision/fapi,n/a,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+ETHUSDT,klines,binance_vision/fapi,5m,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+ETHUSDT,fundingRate,binance_vision/fapi,8h,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+ETHUSDT,exchangeInfo,binance_vision/fapi,n/a,,,0,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.

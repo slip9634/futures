@@ -1,0 +1,4 @@
+schedule,window,form_start,form_end,test_start,test_end,n_pairs_selected,net_return,daily_sharpe,max_drawdown,n_trades,data_source,note
+A_60d_14d_7d,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+B_90d_30d_30d,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.
+C_30d_7d_7d,,,,,,,,,,,UNAVAILABLE_EGRESS_BLOCKED,All binance.com / binance.vision hosts denied by organization egress policy (403 to CONNECT). See NETWORK_BLOCK_EVIDENCE.txt.

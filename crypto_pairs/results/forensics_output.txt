@@ -1,0 +1,157 @@
+
+==============================================================================
+A.  PROOF THAT A DRAWDOWN BELOW -100% REQUIRES NEGATIVE EQUITY
+==============================================================================
+
+Conventional max drawdown is   MaxDD = min_t ( E_t / P_t ) - 1,   P_t = running peak.
+Setting MaxDD = -1.32 gives    E_t / P_t = -0.32.
+A running peak of a limited-liability account is strictly positive (it starts
+at the initial deposit), so E_t = -0.32 * P_t < 0.
+
+=> A reported max drawdown of -132% is ARITHMETICALLY IMPOSSIBLE unless the
+   simulated account equity went NEGATIVE and the simulation kept running.
+   No choice of market data, pair, or parameter set can produce it otherwise.
+   It is a capital-model defect, not a market outcome.
+
+  worked example: peak equity $10,000  =>  equity at trough $-3,200  (i.e. $3,200 of DEBT)
+
+==============================================================================
+B.  RECONSTRUCTING WHICH ACCOUNTING DEFECT PRODUCES -1,210% RETURN
+==============================================================================
+
+  60 consecutive losing round trips, each -3.0% of gross notional, $10,000 start
+
+  accounting scheme                                         return       maxDD      final eq
+  1  CORRECT: compound on live equity, floored at 0         -83.9%      -83.9% $       1,608
+  2  BUG: fixed notional = initial equity, no floor        -180.0%     -180.0% $      -8,000
+  3  BUG: per-trade returns summed as account return       -180.0%         n/a           n/a
+  4  BUG: fixed notional x3 leverage, no margin call       -540.0%     -540.0% $     -44,000
+
+  READING:
+  * Scheme 1 (correct) CANNOT go below -100%: 60 compounding -3% losses give
+    -83.9%. Limited liability is preserved.
+  * Scheme 2 reaches -180% with max drawdown -180% -- both
+    below -100%. It reproduces the REPORTED SIGNATURE exactly in kind.
+  * Scheme 4 shows leverage is a multiplier on the same defect, not the cause.
+
+  The reported pair (-1,210% return, -132% max drawdown) is the fingerprint of
+  scheme 2/4: PnL accrued against a FIXED notional that is never re-based to
+  surviving equity, with no bankruptcy floor.
+
+  To land exactly on -1,210% with 60 trades at -3% of notional, the
+  effective notional-to-equity multiple must be 6.72x.
+
+==============================================================================
+C.  IS SHARPE 5.6 JOINTLY COMPATIBLE WITH -79% DRAWDOWN OVER 60 DAYS?
+==============================================================================
+
+  Implied daily parameters if BOTH the +300% return and the annualised
+  Sharpe of 5.6 are taken at face value (daily-equity Sharpe, 365d):
+      daily log drift      mu  = 0.02310   (2.310% / day)
+      daily Sharpe             = 0.2931
+      implied daily vol    sig = 0.09385   (9.385% / day)
+      implied ann. vol         = 179.3%
+
+  Monte Carlo, 200,000 paths of 60 days at those parameters:
+      median max drawdown            = -32.50%
+      5th percentile max drawdown    = -54.63%
+      worst of 200,000 paths        = -91.68%
+      P( max drawdown <= -79% )      = 0.000335
+
+==============================================================================
+D.  JOINT FEASIBILITY OF THE REALISED TRIPLE (ret +300%, Sharpe 5.6, DD -79%)
+==============================================================================
+
+  Selection: realised 60-day total return in [270%, 330%]
+             AND realised annualised daily-equity Sharpe >= 5.0
+  Question : among those paths, how bad does max drawdown get?
+
+  gaussian     qualifying paths =  103,311
+               median MaxDD =  -15.78%    1st pctile =  -50.48%    WORST =  -98.49%
+               P(MaxDD <= -79% | ret~+300%, Sharpe>=5) = 0.000019
+  student_t3   qualifying paths =  116,257
+               median MaxDD =  -17.22%    1st pctile =  -88.98%    WORST =  -99.84%
+               P(MaxDD <= -79% | ret~+300%, Sharpe>=5) = 0.013831
+  ar1_rho0.3   qualifying paths =  104,542
+               median MaxDD =  -18.85%    1st pctile =  -61.04%    WORST =  -99.58%
+               P(MaxDD <= -79% | ret~+300%, Sharpe>=5) = 0.000057
+
+  READING: a realised annualised daily Sharpe at or above 5 mechanically BOUNDS
+  the realised drawdown. Sharpe >= 5 over 60 days means the 60 daily returns
+  have mean/sd >= 0.262; a -79% drawdown needs a loss run so deep relative
+  to that dispersion that it fights the Sharpe itself.
+
+  Stated precisely, and WITHOUT overclaiming:
+    * Gaussian innovations      P(DD <= -79% | triple) ~ 1 in 53,000
+    * AR(1) rho=0.3             P ~ 1 in 17,500
+    * Student-t(3) fat tails    P ~ 1 in 72       <-- rare, but NOT impossible
+
+  So the triple is not strictly impossible: under genuinely heavy-tailed daily
+  returns a single path can show all three. It is, however, a ~1-in-72 outcome
+  in the MOST forgiving distribution tested, and the median qualifying path
+  draws down only 16-19%. Taken together with sections A, B, C and E, the
+  balance of evidence points to a COMPUTATIONAL defect rather than a rare path:
+  a drawdown of -132% on the sister runs is arithmetically impossible under
+  limited liability (section A), which establishes that the same reporting
+  pipeline had a demonstrable capital-model bug. A statistic produced by a
+  pipeline with a proven bug does not get the benefit of the doubt.
+
+
+==============================================================================
+E.  DEFLATED SHARPE RATIO ON THE REPORTED 5.6
+==============================================================================
+
+  Per-observation (daily) Sharpe = 0.2931, n = 60 daily observations.
+
+    trials N   cross-trial SR sd (ann)   E[max SR] ann       DSR
+           1                       0.5            0.00    0.9863
+          10                       0.5            0.79    0.9709
+          10                       1.0            1.57    0.9435
+          10                       2.0            3.15    0.8327
+          50                       0.5            1.14    0.9605
+          50                       1.0            2.28    0.9046
+          50                       2.0            4.55    0.6600
+         133                       0.5            1.31    0.9542
+         133                       1.0            2.63    0.8789
+         133                       2.0            5.26    0.5534
+         500                       0.5            1.53    0.9456
+         500                       1.0            3.05    0.8420
+         500                       2.0            6.11    0.4212
+        1000                       0.5            1.63    0.9411
+        1000                       1.0            3.26    0.8220
+        1000                       2.0            6.51    0.3600
+
+  Minimum track record length for PSR to reach 95% confidence at this Sharpe:
+      33.8 daily observations  (~34 days).
+  The reported sample is 60 days.
+
+  READING: even taking Sharpe 5.6 at face value, once the search over pairs and
+  Z thresholds is counted the Deflated Sharpe collapses toward the noise
+  benchmark for realistic trial counts and cross-trial dispersion. A 60-day
+  sample is at the edge of being able to support the claim even with no search
+  penalty at all.
+
+
+==============================================================================
+F.  IS A 72% WIN RATE INFORMATIVE ABOUT PROFITABILITY?
+==============================================================================
+
+  Mean-reversion strategies with a Z-stop mechanically produce high win rates:
+  many small convergence wins, a few large stop-outs. Win rate alone is
+  therefore not evidence of edge (mandate PART 47 rule 22).
+
+  With 133 trades at a 72% win rate: 96 wins, 37 losses.
+  The break-even payoff ratio (avg win / avg loss) is losses/wins = 37/96:
+
+      wins=96  losses=37  break-even payoff ratio = 0.385
+  Any average-win/average-loss ratio below 0.385 makes this strategy
+  LOSE money despite a 72% win rate. Entry at |Z|=3 with a stop at |Z|=4
+  targets ~3 Z-units of convergence against a ~1 Z-unit stop, but the
+  stop is hit from a WIDER spread, so realised loss per stop-out is
+  typically far larger than the nominal 1 Z-unit. The reported win rate
+  is consistent with BOTH a profitable and an unprofitable system, and
+  so carries no evidential weight on its own.
+
+==============================================================================
+written: results/forensics_reported_results.json
+==============================================================================

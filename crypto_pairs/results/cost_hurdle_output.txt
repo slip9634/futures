@@ -1,0 +1,150 @@
+
+==============================================================================
+1.  BREAK-EVEN SPREAD MOVE PER ROUND TRIP
+==============================================================================
+
+   fee(bp) slip(bp)   beta   roundtrip cost   break-even |dS|
+                              (bp of gross)(bp of log spread)
+       4.0      1.0   1.30             10.0              23.0
+       4.0      2.0   1.30             12.0              27.6
+       4.0      5.0   1.30             18.0              41.4
+       4.0     10.0   1.30             28.0              64.4
+       5.0      1.0   1.30             12.0              27.6
+       5.0      2.0   1.00             14.0              28.0
+       5.0      2.0   1.30             14.0              32.2
+       5.0      2.0   2.00             14.0              42.0
+       5.0      5.0   1.30             20.0              46.0
+       5.0     10.0   1.30             30.0              69.0
+      10.0      1.0   1.30             22.0              50.6
+      10.0      2.0   1.30             24.0              55.2
+      10.0      5.0   1.30             30.0              69.0
+      10.0     10.0   1.30             40.0              92.0
+
+  BASELINE (5 bp taker, 2 bp slippage, beta=1.3):
+      round-trip cost      = 14 bp of gross notional
+      break-even spread move = 32.2 bp  (0.322% of the log spread)
+  The spread must converge by more than 32 bp for the trade to pay for itself.
+
+
+==============================================================================
+2.  MINIMUM SPREAD VOLATILITY REQUIRED, BY ENTRY/EXIT Z
+==============================================================================
+
+  Minimum sigma_S (standard deviation of the log spread, in bp) needed for
+  a round trip to break even, at 5 bp fee + 2 bp slippage, beta = 1.3:
+
+    entry Z   exit Z=0.0  exit Z=0.25   exit Z=0.5   exit Z=1.0
+       1.50         21.5         25.8         32.2         64.4
+       2.00         16.1         18.4         21.5         32.2
+       2.50         12.9         14.3         16.1         21.5
+       3.00         10.7         11.7         12.9         16.1
+       3.50          9.2          9.9         10.7         12.9
+
+  READING: at entry Z=2.5 / exit Z=0 the spread needs sigma_S >= 12.9 bp
+  (=0.129%). That is a LOW bar -- most crypto pair spreads are far more
+  volatile. So costs alone do not kill a single well-chosen trade.
+  The problem is not the single trade. It is the TRADE RATE, quantified next.
+
+
+==============================================================================
+3.  THE REAL KILLER: ANNUAL COST DRAG FROM TRADE FREQUENCY
+==============================================================================
+
+  Annual cost drag as a fraction of ACCOUNT EQUITY is
+
+      drag = (round trips per year) x 2 (f + s) x (gross notional / equity)
+
+  A 5-minute mean-reversion rule with a Z-crossing trigger generates a high
+  trade rate by construction. Measured on the engine-verification run (a
+  synthetic pair with a 138-bar spread half-life): 93 round trips in 30,000
+  bars = 0.89 round trips per DAY per pair = ~326 per year per pair.
+
+    round trips/yr  gross/equity   drag @5+2bp   drag @5+5bp  drag @10+10bp
+                50          0.50          3.5%          5.0%          10.0%
+                50          1.00          7.0%         10.0%          20.0%
+               100          0.50          7.0%         10.0%          20.0%
+               100          1.00         14.0%         20.0%          40.0%
+               200          0.50         14.0%         20.0%          40.0%
+               200          1.00         28.0%         40.0%          80.0%
+               326          0.50         22.8%         32.6%          65.2%
+               326          1.00         45.6%         65.2%         130.4%
+               500          0.50         35.0%         50.0%         100.0%
+               500          1.00         70.0%        100.0%         200.0%
+               750          0.50         52.5%         75.0%         150.0%
+               750          1.00        105.0%        150.0%         300.0%
+
+  READING: at the measured trade rate of ~326 round trips per year per pair and
+  a gross notional equal to account equity, commissions plus slippage alone
+  consume 46% OF ACCOUNT EQUITY PER YEAR at the baseline cost
+  assumption, and 130% at the 2x stress assumption.
+
+  This is the central economic obstacle to 5-minute crypto pairs trading. The
+  gross edge must exceed a ~46%/yr hurdle before a single dollar is
+  earned. The engine-verification run is consistent with exactly this: costs
+  consumed 91.2% of gross PnL on a pair that was cointegrated BY CONSTRUCTION
+  and therefore represents a best case unobtainable in real markets.
+
+
+==============================================================================
+4.  FUNDING DRAG -- WHEN DOES IT MATTER?
+==============================================================================
+
+  For a short-spread position (short leg 1, long leg 2) the funding cash flow is
+      net = n1 * r1  -  n2 * r2
+  With both legs on the same funding rate r this collapses to
+      net = r * G * (1 - |beta|) / (1 + |beta|)
+  which VANISHES at beta = 1: a beta-1 pair is naturally funding-hedged.
+  Divergent funding between the legs is what creates the drag -- and divergent
+  funding is precisely the meme-coin regime.
+
+    leg1 r/8h  leg2 r/8h   beta   drag/8h(bp of G)  drag over 24h   over 72h
+       0.010%     0.010%   1.00              -0.00          -0.00      -0.00
+       0.010%     0.010%   1.30               0.13           0.39       1.17
+       0.010%     0.010%   2.00               0.33           1.00       3.00
+       0.030%     0.010%   1.30              -0.74          -2.22      -6.65
+       0.100%     0.010%   1.30              -3.78         -11.35     -34.04
+       0.300%    -0.050%   1.30             -15.87         -47.61    -142.83
+       0.100%     0.010%   1.00              -4.50         -13.50     -40.50
+
+  READING: with both legs near the 0.01%/8h baseline, funding drag over a
+  multi-day hold is a fraction of a basis point -- negligible against the
+  14 bp round-trip cost. But at meme-coin funding levels (0.10%/8h on one
+  leg) the 72-hour drag reaches ~-34.0 bp of gross, comparable to the
+  ENTIRE round-trip commission. Funding is a second-order cost for BTC/ETH-like
+  pairs and a first-order cost for meme pairs held for days.
+
+  NOTE: the funding RATES above are illustrative parameter choices, not measured
+  Binance history -- funding archives were egress-blocked in this run. The
+  STRUCTURE of the result (cancellation at beta=1, first-order drag under
+  divergent funding) is analytic and does not depend on the specific numbers.
+
+
+==============================================================================
+5.  REQUIRED GROSS SHARPE TO CLEAR THE HURDLE
+==============================================================================
+
+  If a pair's GROSS annual return is R_g on gross notional equal to equity, and
+  the annual cost drag is D, the net return is R_g - D. For the strategy to be
+  worth trading at a net Sharpe of 1.0 with, say, 10% annualised net volatility,
+  it needs R_g >= D + 10%.
+
+    round trips/yr   drag @5+2bp   required gross return  required gross Sharpe
+               100         14.0%                   24.0%                   2.40
+               200         28.0%                   38.0%                   3.80
+               326         45.6%                   55.6%                   5.56
+               500         70.0%                   80.0%                   8.00
+
+  READING: at 326 round trips/yr the strategy must earn a GROSS Sharpe of about
+  5.6 merely to deliver a NET Sharpe of 1.0. Gross Sharpes of that
+  magnitude are not plausible for a simple two-leg cointegration rule in a
+  liquid market. The arithmetic pushes hard toward one of three conclusions:
+     (a) trade far less often (higher entry Z, wider reset, longer half-life
+         pairs) so the drag term shrinks;
+     (b) obtain maker fills, which requires a queue/fill model this project
+         does not have and the mandate forbids assuming; or
+     (c) the edge does not exist at this frequency.
+
+
+==============================================================================
+written: results/cost_hurdle.json
+==============================================================================

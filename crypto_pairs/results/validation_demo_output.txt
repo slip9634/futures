@@ -1,0 +1,107 @@
+synthetic pair: true beta=1.300  spread half-life = 501 bars (41.7 h)  bars=60000
+
+==============================================================================
+1.  PARAMETER GRID + TRIAL REGISTRY  (mandate PART 21 / PART 31)
+==============================================================================
+  trials run: 216   (all recorded, winners AND losers)   68s
+  all reconciled: True   any bankrupt: False
+  net return  : min  -10.62%   median   -3.95%   max    5.34%
+  PROFITABLE configurations: 24 / 216 (11.1%)
+  daily Sharpe: min  -6.80   median  -1.68   max   1.53
+
+==============================================================================
+2.  PARAMETER PLATEAU vs ISOLATED PEAK  (mandate PART 11)
+==============================================================================
+
+  mean net return by entry Z (rows) x exit Z (cols), averaged over z-window & time stop:
+
+exit_z   0.00  0.25  0.50  1.00
+entry_z                        
+1.50    -4.78 -8.19 -8.93 -9.89
+1.75    -4.36 -7.85 -8.38 -9.44
+2.00    -4.12 -6.45 -7.84 -8.36
+2.25    -1.98 -5.09 -6.29 -6.88
+2.50    -3.39 -4.08 -5.38 -5.42
+2.75    -4.13 -2.99 -4.10 -4.58
+3.00    -1.23 -0.72 -2.02 -2.25
+3.25    -0.08 -0.51 -1.78 -1.53
+3.50    -0.78 -0.69 -1.24 -0.93
+
+  best configuration : hw864_zw288_e2.25_x0.0_ts864  net 5.34%  Sharpe 1.07
+  its entry-Z neighbourhood (+-0.3): [5.1, 5.34, -1.38]
+  PLATEAU (all neighbours positive): False
+
+==============================================================================
+3.  DEFLATED SHARPE WITH THE TRUE TRIAL COUNT  (mandate PART 21)
+==============================================================================
+
+  best config annualised daily Sharpe : 1.072
+  observations (days)                 : 207
+  trials actually run                 : 216
+  cross-trial SR dispersion (ann)     : 1.482
+  E[max Sharpe] from noise alone (ann): 4.135
+  PSR  (no selection penalty)         : 0.7913
+  DSR  (penalised for 216 trials)      : 0.0103
+  --> at the conventional 0.95 bar the best configuration DOES NOT SURVIVE deflation.
+
+==============================================================================
+4.  PROBABILITY OF BACKTEST OVERFITTING (CSCV)  (mandate PART 21)
+==============================================================================
+
+  CSCV matrix: 207 daily observations x 216 configurations
+  PBO                       : 0.3889   (0.5 = selection carries no information)
+  combinations evaluated    : 252
+  median logit lambda       : 0.354
+  IS->OOS degradation slope : -1.358
+  P(OOS loss | IS-best)     : 0.7024
+
+==============================================================================
+5.  PLACEBO CONTROLS  (mandate PART 26)
+==============================================================================
+
+  Does the rule earn from PAIR STRUCTURE, or would it earn the same on any two
+  volatile series? Three controls, each run with the identical rule and costs:
+    P1  broken pair -- leg 2 replaced by an INDEPENDENT random walk
+    P2  shifted signal -- Z series rolled forward 5,000 bars (destroys alignment)
+    P3  random entry times matched to the real holding-period distribution
+
+  REAL   net return   -4.099%   trades   70   Sharpe  -1.34
+  P1     broken pair      : mean   -8.333%   range [-10.57%, -0.54%]   n=12
+  P2     shifted signal   : mean   -8.535%   range [-10.51%, -2.87%]   n=4
+  P3     random entries   : mean   -4.076%   range [-7.56%, 0.49%]   n=12
+
+  Placebo distribution: mean -6.537%, max 0.494%, n=28
+  Empirical p-value P(placebo >= real) = 0.2500
+  --> the rule DOES NOT extract pair structure beyond generic volatility harvesting.
+
+
+==============================================================================
+6.  COST AND DELAY STRESS  (mandate PART 25)
+==============================================================================
+
+         stress  param  net_return  n_trades    sharpe         data_source
+       fee_x1.0    1.0      -4.099        70 -1.344412 ENGINE_VERIFICATION
+       fee_x1.5    1.5      -5.764        70 -1.920794 ENGINE_VERIFICATION
+       fee_x2.0    2.0      -7.401        70 -2.495922 ENGINE_VERIFICATION
+       fee_x3.0    3.0      -9.595        63 -3.337869 ENGINE_VERIFICATION
+ slippage_1.0bp    1.0      -3.425        70 -1.113965 ENGINE_VERIFICATION
+ slippage_2.0bp    2.0      -4.099        70 -1.344412 ENGINE_VERIFICATION
+ slippage_5.0bp    5.0      -6.094        70 -2.036003 ENGINE_VERIFICATION
+slippage_10.0bp   10.0      -9.286        69 -3.168351 ENGINE_VERIFICATION
+     delay_1bar    1.0      -4.099        70 -1.344412 ENGINE_VERIFICATION
+     delay_2bar    2.0      -4.211        70 -1.415941 ENGINE_VERIFICATION
+     delay_3bar    3.0      -4.142        70 -1.375094 ENGINE_VERIFICATION
+
+==============================================================================
+7.  BOOTSTRAP UNCERTAINTY ON THE HEADLINE SHARPE  (mandate PART 22)
+==============================================================================
+
+  stationary bootstrap, mean block 1.3 days, 2000 resamples
+  annualised daily Sharpe = 1.072   95% CI [-1.572, 3.542]
+  P(Sharpe <= 0) under resampling = 0.2080
+
+==============================================================================
+artefacts written: experiment_registry.parquet, trade_log.parquet,
+  zscore_distribution.csv, cost_stress_results.csv, placebo_results.csv,
+  validation_demo_summary.json
+==============================================================================

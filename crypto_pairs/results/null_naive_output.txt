@@ -1,0 +1,1 @@
+  rep 1/5 naive=  80 orient=  35 BH5=  0 (528s)

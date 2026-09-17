@@ -1,0 +1,106 @@
+  HL(h)  sigma_S  Zwin(h)  trades  gross/trade  cost/trade  net ret%   Sharpe   verdict
+    2.0     0.5%     24.0     219       149.86       75.48     16.30    12.38      PASS
+    2.0     1.0%     24.0     219       360.88       88.78     59.60    16.91      PASS
+    2.0     2.0%     24.0     219      1057.59      127.09    203.81    16.13      PASS
+    2.0     4.0%     24.0     219      5172.78      292.35   1068.92    17.78      PASS
+    2.0     8.0%     24.0     219     45013.27     1402.41   9551.63    15.74      PASS
+    6.0     0.5%     24.0     193        55.25       69.04     -2.65    -2.59      fail
+    6.0     1.0%     24.0     193       121.72       73.15      9.39     4.52      PASS
+    6.0     2.0%     24.0     193       296.44       83.09     41.19     7.84      PASS
+    6.0     4.0%     24.0     192       698.45      104.33    114.07     7.29      PASS
+    6.0     8.0%     24.0     190      1811.51      156.34    314.51     7.50      PASS
+   12.0     0.5%     36.0     136        33.74       68.06     -4.64    -5.68      fail
+   12.0     1.0%     36.0     136        74.57       69.57      0.71     0.41      PASS
+   12.0     2.0%     36.0     136       172.38       72.90     13.56     3.47      PASS
+   12.0     4.0%     36.0     136       389.48       81.04     41.97     4.30      PASS
+   12.0     8.0%     36.0      59       262.78       76.02     11.02     1.18      PASS
+   24.0     0.5%     72.0      77        23.60       68.83     -3.49    -5.50      fail
+   24.0     1.0%     72.0      77        54.88       69.65     -1.15    -1.06      fail
+   24.0     2.0%     72.0      77       119.67       71.41      3.70     1.33      PASS
+   24.0     4.0%     72.0      77       304.88       76.09     17.61     2.81      PASS
+   24.0     8.0%     72.0      77       580.82       80.72     38.54     2.95      PASS
+   48.0     0.5%    144.0      37         3.10       68.94     -2.43    -5.59      fail
+   48.0     1.0%    144.0      37         6.31       68.73     -2.30    -2.86      fail
+   48.0     2.0%    144.0      37        19.41       68.39     -1.80    -1.12      fail
+   48.0     4.0%    144.0      37        73.41       67.93      0.23     0.10      PASS
+   48.0     8.0%    144.0      10      -976.84       68.77    -10.43    -3.12      fail
+
+==============================================================================
+FEASIBLE REGION -- net return % by half-life (rows) and spread sigma (cols)
+==============================================================================
+sigma_S          0.005  0.010   0.020    0.040    0.080
+half_life_hours                                        
+2.0              16.30  59.60  203.81  1068.92  9551.63
+6.0              -2.65   9.39   41.19   114.07   314.51
+12.0             -4.64   0.71   13.56    41.97    11.02
+24.0             -3.49  -1.15    3.70    17.61    38.54
+48.0             -2.43  -2.30   -1.80     0.23   -10.43
+
+trades per configuration:
+sigma_S          0.005  0.010  0.020  0.040  0.080
+half_life_hours                                   
+2.0              219.0  219.0  219.0  219.0  219.0
+6.0              193.0  193.0  193.0  192.0  190.0
+12.0             136.0  136.0  136.0  136.0   59.0
+24.0              77.0   77.0   77.0   77.0   77.0
+48.0              37.0   37.0   37.0   37.0   10.0
+
+==============================================================================
+CAPTURE EFFICIENCY -- realised spread capture, as a multiple of sigma_S
+(nominal capture for entry 2.5 -> exit 0.25 is 2.25 sigma)
+==============================================================================
+sigma_S          0.005  0.010  0.020  0.040   0.080
+half_life_hours                                    
+2.0              1.379  1.660  2.432  5.949  25.883
+6.0              0.508  0.560  0.682  0.803   1.042
+12.0             0.310  0.343  0.396  0.448   0.151
+24.0             0.217  0.252  0.275  0.351   0.334
+48.0             0.029  0.029  0.045  0.084     NaN
+
+as a PERCENTAGE of the nominal target:
+sigma_S          0.005  0.010  0.020  0.040   0.080
+half_life_hours                                    
+2.0               61.3   73.8  108.1  264.4  1150.3
+6.0               22.6   24.9   30.3   35.7    46.3
+12.0              13.8   15.2   17.6   19.9     6.7
+24.0               9.7   11.2   12.2   15.6    14.8
+48.0               1.3    1.3    2.0    3.8     NaN
+
+==============================================================================
+READING
+
+1. COST PER ROUND TRIP IS CONSTANT at ~$73 -- exactly 14 bp of the
+   $50,000 gross notional, confirming the cost identity in cost_hurdle.py by
+   direct engine measurement. Profitability is decided entirely by GROSS PROFIT
+   PER ROUND TRIP.
+
+2. THE RULE CAPTURES FAR LESS THAN IT AIMS AT. Median realised capture is
+   0.374 sigma against a nominal target of 2.25 sigma -- about
+   17% efficiency. Two mechanisms cause this, both real and both
+   unavoidable for this rule family:
+     (a) the rolling Z mean CHASES the spread, so |Z| decays toward the exit
+         band without the economic convergence that pays for the trade;
+     (b) stop-outs and time stops close positions from wider spreads than the
+         nominal 1-Z-unit risk suggests.
+   Efficiency degrades sharply with half-life: ~30% at a 6-hour half-life,
+   ~12% at 24 hours, ~2% at 48 hours.
+
+3. THE CORRECTED BREAK-EVEN CONDITION is therefore NOT the naive
+   sigma_S > 2(f+s)(1+beta)/(z_in - z_out) = 0.14%,
+   but
+        sigma_S  >  2 (f + s) (1 + beta) / kappa
+   with kappa the REALISED capture. At the measured kappa:
+        kappa = 0.244  ->  sigma_S > 1.32%
+        kappa = 0.374  ->  sigma_S > 0.86%
+        kappa = 0.863  ->  sigma_S > 0.37%
+   -- between two and six times harsher than the naive figure.
+
+4. CONFIGURATIONS CLEARING COSTS: 17 / 25. The boundary runs diagonally:
+   a short half-life tolerates a low spread volatility because reversion is
+   fast and complete; a long half-life needs a large spread volatility to
+   overcome both the fixed cost and the collapse in capture efficiency.
+
+   This is the SPECIFICATION a real pair must meet before it is worth trading.
+   It is NOT a claim that such pairs exist on Binance -- that requires market
+   data this run could not obtain.
+==============================================================================

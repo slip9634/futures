@@ -1,0 +1,135 @@
+# ===========================================================================
+# Crypto perpetual pairs statistical arbitrage -- frozen research configuration
+# ---------------------------------------------------------------------------
+# STATUS: this config is COMPLETE and RUNNABLE but was NOT executed against
+# market data in this run -- all Binance hosts are denied by the environment's
+# egress policy (see NETWORK_BLOCK_EVIDENCE.txt). Values marked GRID are search
+# spaces to be resolved INSIDE TRAINING DATA ONLY; values marked FIXED are
+# methodological choices justified in research_notes.md and are not tuned.
+# ===========================================================================
+
+run:
+  name: crypto_pairs_v1
+  bar_interval: 5m
+  bars_per_day: 288
+  timezone: UTC
+  random_seed: 20260917
+
+data:
+  market: binance_usdm_perpetual        # FIXED -- no exchange substitution
+  source: binance_vision
+  verify_checksums: true
+  max_ffill_bars: 0                     # FIXED -- never fill gaps
+  require_both_legs: true               # FIXED -- pair bar needs both legs
+
+splits:                                  # mandate PART 20
+  development:  ["2022-01-01", "2024-12-31"]
+  validation:   ["2025-01-01", "2025-12-31"]
+  locked_test:  ["2026-01-01", "2026-06-30"]
+  contaminated: ["2026-07-19", "2026-09-16"]   # DIAGNOSTIC ONLY -- never OOS
+
+universe:                                # mandate PART 4
+  min_history_days: 90                  # GRID: [60, 90, 180]
+  top_n: 60                             # GRID: [30, 45, 60]
+  max_missing_frac: 0.02
+  min_median_quote_volume_usdt: 50000   # per 5m bar; data-driven, re-derive
+  liquidity_inputs: [median_quote_volume, median_count, missing_frac, hl_range_proxy]
+
+prescreen:                               # mandate PART 5
+  return_correlation_min: 0.60          # GRID: [0.50, 0.60, 0.70, 0.80]
+  correlation_method: pearson_on_5m_log_returns   # FIXED -- never raw price
+  report_raw_price_correlation: true    # reported, never used as a criterion
+
+cointegration:                           # mandate PART 6
+  primary: engle_granger
+  both_orientations: true               # FIXED
+  orientation_penalty: 2.0              # FIXED -- Bonferroni within the pair
+  adf_maxlag: 12                        # 1 hour; fixed for tractability
+  confirm_with_johansen: true
+  kpss_must_not_reject: true
+  fdr_alpha: 0.05                       # GRID: [0.01, 0.05, 0.10]
+
+halflife:                                # mandate PART 9
+  require_df_significance: true         # FIXED -- see research_notes 2.4
+  df_tau_crit_5pct: -2.86
+  eligibility_band_hours: [0.5, 24.0]   # GRID: [[0.5,6],[1,24],[2,72]]
+
+hedge:                                   # mandate HEDGE-RATIO MODELS
+  model: rolling_ols                    # GRID: [static_ols, rolling_ols, kalman]
+  window_bars: 864                      # 3 days. GRID: [288,864,2016,4032,8640]
+  beta_instability_max_cv: 0.25
+
+zscore:                                  # mandate PART 10 / Z LOOKBACK
+  method: rolling_mean_std              # GRID: [rolling, median_mad, ewm]
+  window_bars: 864                      # GRID: [144,288,576,864,1440]
+  # NOTE: must be materially LONGER than the spread half-life or the rolling
+  # mean chases the spread and |Z| reverts without economic convergence.
+  min_window_to_halflife_ratio: 3.0     # FIXED -- see research_notes 2.5
+
+signal:                                  # mandate PART 11-13
+  entry_z: 2.5      # GRID: [1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.25,3.5] -- plateau required
+  exit_z: 0.25      # GRID: [0.0, 0.25, 0.5, 1.0]
+  stop_z: 4.0       # GRID: [3.5, 4.0, 4.5, 5.0]
+  reset_z: 1.0      # GRID: [0.5, 1.0, 1.5]
+  require_threshold_crossing: true      # FIXED -- not a level trigger
+  one_position_per_pair: true           # FIXED
+  time_stop_mode: halflife              # GRID: [fixed, halflife]
+  time_stop_hl_mult: 3.0                # GRID: [1, 2, 3]
+  time_stop_bars: 288                   # GRID: [72,144,288,576,864] (6h..72h)
+  use_break_stop: true
+
+execution:                               # mandate PART 15
+  delay_bars: 1                         # FIXED baseline = next bar open
+  delay_stress: [1, 2, 3]
+
+costs:
+  fee_taker_bps: 5.0                    # UNVERIFIED THIS RUN -- see notes 2.7
+  fee_maker_bps: 2.0
+  assume_taker: true                    # FIXED -- no maker fills without a fill model
+  fee_multipliers: [1.0, 1.5, 2.0, 3.0]
+  slippage_bps: 2.0
+  slippage_grid_bps: [1.0, 2.0, 5.0, 10.0]
+  slippage_mode: fixed                  # [fixed, participation]
+  max_participation: 0.10
+  funding: historical                   # FIXED -- never assumed zero or 8-hourly
+
+capital:                                 # mandate PART 14 / CAPITAL MODEL
+  initial_equity: 100000
+  gross_leverage: 1.0                   # STRESS: [1.0, 1.5, 2.0]
+  sizing: equal_gross                   # GRID: [equal_gross, inv_spread_vol, vol_target]
+  per_pair_gross_frac: 0.15             # GRID: [0.10, 0.15, 0.20]
+  portfolio_gross_cap: 1.0              # GRID: [1.0, 1.25, 1.5]
+  max_concurrent_pairs: 5               # GRID: [3, 5, 10]
+  max_symbol_gross_frac: 0.40           # common-leg concentration limit
+
+risk:                                    # mandate PART 18
+  daily_loss_stop_new: 0.02
+  daily_loss_hard: 0.03
+  dd_reduce_at: 0.10
+  dd_halt_at: 0.20
+  maint_margin_rate: 0.005              # APPROXIMATE -- true tiers unavailable
+  liquidation_penalty_bps: 50.0
+  bankruptcy_is_terminal: true          # FIXED -- equity<=0 halts permanently
+
+walk_forward:                            # mandate PART 19
+  schedules:
+    A: {formation_days: 60, test_days: 14, step_days: 7}
+    B: {formation_days: 90, test_days: 30, step_days: 30}
+    C: {formation_days: 30, test_days: 7,  step_days: 7}
+  purge_bars: 864                       # = max signal lookback
+  embargo_bars: 288
+
+validation:                              # mandate PART 21-22
+  compute_psr: true
+  compute_dsr: true
+  cscv_splits: 16
+  bootstrap_n: 2000
+  bootstrap_method: stationary
+
+graduation:                              # mandate PART 30 -- evaluated, not gamed
+  min_oos_daily_sharpe: 1.0
+  max_drawdown: 0.20
+  require_positive_expectancy: true
+  require_cost_x2_not_catastrophic: true
+  max_single_pair_profit_share: 0.50
+  require_parameter_plateau: true
