@@ -163,6 +163,8 @@ Entry Z 2.5 → exit Z 0.25 nominally targets **2.25σ** of spread convergence. 
 1. **the rolling Z mean chases the spread**, so |Z| decays into the exit band without the economic convergence that pays for the trade;
 2. **stops and time stops close positions from wider spreads** than the nominal 1-Z-unit risk implies.
 
+**Mechanism (1) dominates.** Exit reasons on the reference run: mean_exit 67, z_stop 3 (of 70). **96% of positions exited on the mean band, not on a stop** — so the shortfall is not stop-outs eating the winners. The spread is simply not converging by anything like 2.25σ before |Z| decays into the exit band, because the rolling mean has moved to meet it. That is a defect of the *standardisation*, not of the stop policy, and it is why `config.yaml` requires the Z window to be at least 3× the half-life.
+
 Efficiency collapses as half-life lengthens:
 
 | spread half-life | realised capture as % of the 2.25σ target |

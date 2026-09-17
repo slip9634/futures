@@ -341,6 +341,20 @@ if FR is not None:
     W("2. **stops and time stops close positions from wider spreads** than the "
       "nominal 1-Z-unit risk implies.")
     W()
+    tl = load("trade_log.parquet")
+    if tl is not None and "exit_reason" in tl.columns:
+        vc = tl.exit_reason.value_counts()
+        parts = ", ".join(f"{k} {v}" for k, v in vc.items())
+        me = int(vc.get("mean_exit", 0)); tot = int(vc.sum())
+        W(f"**Mechanism (1) dominates.** Exit reasons on the reference run: "
+          f"{parts} (of {tot}). **{100*me/tot:.0f}% of positions exited on the mean band, "
+          f"not on a stop** — so the shortfall is not stop-outs eating the winners. "
+          "The spread is simply not converging by anything like 2.25σ before |Z| "
+          "decays into the exit band, because the rolling mean has moved to meet "
+          "it. That is a defect of the *standardisation*, not of the stop policy, "
+          "and it is why `config.yaml` requires the Z window to be at least 3× the "
+          "half-life.")
+        W()
     W("Efficiency collapses as half-life lengthens:")
     W()
     W("| spread half-life | realised capture as % of the 2.25σ target |")
