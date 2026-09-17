@@ -4,3 +4,4 @@
   rep  4/10  pairs=1225  raw p<.05=  53  raw p<.01=  9  BH5%=  0  min p=3.19e-04  sig-HL pairs= 101  (243s)
   rep  5/10  pairs=1225  raw p<.05=  66  raw p<.01= 10  BH5%=  0  min p=1.17e-03  sig-HL pairs= 193  (307s)
   rep  6/10  pairs=1225  raw p<.05=  56  raw p<.01=  6  BH5%=  0  min p=9.06e-05  sig-HL pairs= 202  (764s)
+  rep  7/10  pairs=1225  raw p<.05=  38  raw p<.01=  6  BH5%=  0  min p=3.17e-04  sig-HL pairs= 158  (1339s)
