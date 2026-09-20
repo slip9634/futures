@@ -102,6 +102,48 @@ an append-only, diff-friendly JSONL forward-test record, and every capture
 tick commits it. See `src/futures_quant/persistence/ledger.py` for the
 full rationale.
 
+## Research readiness audit (2026-09-20) — read this before trusting any backtest result
+
+A readiness audit run on 2026-09-20 found that **most recorded backtest
+results in this repository are invalid**, for reasons upstream of any
+strategy logic. Full write-up in
+[`research/AUDIT_2026-09-20_data_integrity.md`](research/AUDIT_2026-09-20_data_integrity.md);
+reproduce with `python scripts/run_research_readiness_audit.py`.
+
+1. **9 of 19 raw data files are not tradable.** Requesting more history
+   than a futures contract's liquid front-month window returns settlement
+   marks — `open == high == low == close`, volume `0` — with no error. Up
+   to 78% of bars in the daily files are these. **12 of the 13 backtest
+   scripts read at least one rejected file**, including the HAC re-check
+   behind the project's only provisional pass (H009 / P014).
+   `validate_bars()` passed all of it: a flat bar violates none of its
+   bar-level checks, and zero volume was explicitly classed as
+   informational.
+2. **The intraday captures are the wrong contract.** The captured MESZ6
+   30-minute series has a median of 76 contracts per bar; MESU6, the actual
+   front month over that window, traded 5,454. `contracts/roll.py` picks
+   the contract to trade *now*; a historical window needs whichever
+   contract was front month *then*.
+3. **The samples cannot resolve the questions asked of them.** Minimum
+   detectable Sharpe at t=2 is **2.03** on the 245-bar daily sample and
+   **3.62** on the 1000-bar 30-minute sample. Across 17 hypotheses, noise
+   alone is expected to produce a best in-sample Sharpe of **1.83**.
+
+Two gates were added rather than patching the affected results:
+
+- `src/futures_quant/data/tradability.py` — `assess_tradability()` returns
+  TRADABLE / DEGRADED / NOT_TRADABLE from flat-bar rate, zero-volume rate
+  and median volume. `is_tradable` is true only for TRADABLE; DEGRADED must
+  be an explicit caller decision.
+- `src/futures_quant/research/power.py` — `minimum_detectable_sharpe()` for
+  pre-registering whether a sample can answer a question at all, plus
+  `expected_max_sharpe()`, `minimum_backtest_length_years()` and
+  `deflated_sharpe_ratio()` (Bailey & López de Prado) for the
+  selection-bias correction that a 17-hypothesis trial count requires.
+
+**The affected hypotheses are unresolved, not rejected.** They need re-running
+on tradable data, not re-reading. See the audit's recommended order of work.
+
 ## What's implemented so far
 
 - Repository scaffold matching the mandate's target layout.

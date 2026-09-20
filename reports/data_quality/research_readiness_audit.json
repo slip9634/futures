@@ -1,0 +1,527 @@
+{
+  "generated_at_utc": "2026-09-20T15:12:02.249251+00:00",
+  "summary": {
+    "n_data_files": 19,
+    "counts_by_verdict": {
+      "DEGRADED": 4,
+      "NOT_TRADABLE": 9,
+      "TRADABLE": 4,
+      "UNUSABLE_SCHEMA": 2
+    },
+    "scripts_consuming_rejected_data": [
+      "run_crypto_lead_lag.py",
+      "run_h009_hac_recheck.py",
+      "run_h010_h011_backtests.py",
+      "run_h015_volume_shock_backtest.py",
+      "run_h016_macd_swing_breakout_backtest.py",
+      "run_h017_ma_threshold_backtest.py",
+      "run_mcl_extended_backtests.py",
+      "run_multi_horizon_trend_backtests.py",
+      "run_orb_backtests.py",
+      "run_session_decomposition_backtests.py",
+      "run_spread_mean_reversion_backtest.py",
+      "run_vol_scaled_and_portfolio_backtests.py"
+    ]
+  },
+  "power": {
+    "n_hypotheses_tested": 17,
+    "note": "n_hypotheses counts ledger rows, not parameter variants. The true trial count is higher -- H017 alone reports 3 window pairs x 2 thresholds x 3 timeframes x 3 instruments -- so every figure here is a lower bound on the selection bias actually incurred.",
+    "expected_max_sharpe_from_noise": 1.83,
+    "minimum_backtest_length_years_at_sharpe_1": 3.34,
+    "minimum_backtest_length_years_at_sharpe_1.5": 1.49
+  },
+  "data_files": [
+    {
+      "file": "data/raw/GLD/GLD_1day_20250902_20260914.csv",
+      "consumed_by_scripts": [
+        "run_h017_etf_extension.py"
+      ],
+      "n_bars": 260,
+      "flat_bars": 0,
+      "flat_bar_rate": 0.0,
+      "zero_volume_bars": 260,
+      "zero_volume_rate": 1.0,
+      "median_volume": 0.0,
+      "verdict": "DEGRADED",
+      "reasons": [
+        "volume is zero on every bar while bars carry genuine high-low ranges: the feed does not populate volume for this instrument, so liquidity cannot be assessed from this series (prices themselves look traded)"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 1.032,
+      "minimum_detectable_sharpe_t2": 1.97
+    },
+    {
+      "file": "data/raw/MBT/MBTU6_1day_20250331_20260911.csv",
+      "consumed_by_scripts": [
+        "run_crypto_lead_lag.py"
+      ],
+      "n_bars": 364,
+      "flat_bars": 281,
+      "flat_bar_rate": 0.772,
+      "zero_volume_bars": 364,
+      "zero_volume_rate": 1.0,
+      "median_volume": 0.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "77.2% of bars are flat (open==high==low==close), above the 10% reject threshold -- these are settlement/indicative marks, not traded bars; every range-based feature computed on them is degenerate",
+        "100.0% of bars have zero volume, above the 50% reject threshold -- nothing traded at these prices",
+        "median volume is 0, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 1.444,
+      "minimum_detectable_sharpe_t2": 1.66
+    },
+    {
+      "file": "data/raw/MCL/MCLV6_15min_20260727_20260911.csv",
+      "consumed_by_scripts": [
+        "run_h017_ma_threshold_backtest.py",
+        "run_orb_backtests.py"
+      ],
+      "n_bars": 1000,
+      "flat_bars": 0,
+      "flat_bar_rate": 0.0,
+      "zero_volume_bars": 0,
+      "zero_volume_rate": 0.0,
+      "median_volume": 650.0,
+      "verdict": "TRADABLE",
+      "reasons": [],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "15min",
+      "sample_years": 0.153,
+      "minimum_detectable_sharpe_t2": 5.12
+    },
+    {
+      "file": "data/raw/MCL/MCLV6_1day_20231023_20260911_full.csv",
+      "consumed_by_scripts": [
+        "run_crypto_lead_lag.py",
+        "run_h010_h011_backtests.py",
+        "run_mcl_extended_backtests.py"
+      ],
+      "n_bars": 712,
+      "flat_bars": 530,
+      "flat_bar_rate": 0.7444,
+      "zero_volume_bars": 712,
+      "zero_volume_rate": 1.0,
+      "median_volume": 0.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "74.4% of bars are flat (open==high==low==close), above the 10% reject threshold -- these are settlement/indicative marks, not traded bars; every range-based feature computed on them is degenerate",
+        "100.0% of bars have zero volume, above the 50% reject threshold -- nothing traded at these prices",
+        "median volume is 0, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 2.825,
+      "minimum_detectable_sharpe_t2": 1.19
+    },
+    {
+      "file": "data/raw/MCL/MCLV6_1day_20251125_20260911.csv",
+      "consumed_by_scripts": [
+        "run_h009_hac_recheck.py",
+        "run_multi_horizon_trend_backtests.py",
+        "run_session_decomposition_backtests.py",
+        "run_spread_mean_reversion_backtest.py",
+        "run_vol_scaled_and_portfolio_backtests.py"
+      ],
+      "verdict": "UNUSABLE_SCHEMA",
+      "reasons": [
+        "file does not carry full OHLCV columns, so neither range-based features nor tradability can be assessed"
+      ]
+    },
+    {
+      "file": "data/raw/MCL/MCLV6_1day_20251224_20260911_clean_with_volume.csv",
+      "consumed_by_scripts": [
+        "run_h015_volume_shock_backtest.py",
+        "run_h016_macd_swing_breakout_backtest.py",
+        "run_h017_ma_threshold_backtest.py"
+      ],
+      "n_bars": 179,
+      "flat_bars": 16,
+      "flat_bar_rate": 0.0894,
+      "zero_volume_bars": 16,
+      "zero_volume_rate": 0.0894,
+      "median_volume": 39.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "8.9% of bars are flat (open==high==low==close), above the 2% warn threshold",
+        "median volume is 39, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 0.71,
+      "minimum_detectable_sharpe_t2": 2.37
+    },
+    {
+      "file": "data/raw/MCL/MCLV6_30min_20260608_20260911.csv",
+      "consumed_by_scripts": [
+        "run_h017_ma_threshold_backtest.py",
+        "run_orb_backtests.py"
+      ],
+      "n_bars": 1000,
+      "flat_bars": 36,
+      "flat_bar_rate": 0.036,
+      "zero_volume_bars": 16,
+      "zero_volume_rate": 0.016,
+      "median_volume": 158.0,
+      "verdict": "DEGRADED",
+      "reasons": [
+        "3.6% of bars are flat (open==high==low==close), above the 2% warn threshold"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "30min",
+      "sample_years": 0.305,
+      "minimum_detectable_sharpe_t2": 3.62
+    },
+    {
+      "file": "data/raw/MCL/MCLX6_1day_20231023_20260911_full.csv",
+      "consumed_by_scripts": [
+        "run_mcl_extended_backtests.py"
+      ],
+      "n_bars": 712,
+      "flat_bars": 553,
+      "flat_bar_rate": 0.7767,
+      "zero_volume_bars": 712,
+      "zero_volume_rate": 1.0,
+      "median_volume": 0.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "77.7% of bars are flat (open==high==low==close), above the 10% reject threshold -- these are settlement/indicative marks, not traded bars; every range-based feature computed on them is degenerate",
+        "100.0% of bars have zero volume, above the 50% reject threshold -- nothing traded at these prices",
+        "median volume is 0, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 2.825,
+      "minimum_detectable_sharpe_t2": 1.19
+    },
+    {
+      "file": "data/raw/MCL/MCLX6_1day_20251125_20260911.csv",
+      "consumed_by_scripts": [
+        "run_spread_mean_reversion_backtest.py"
+      ],
+      "verdict": "UNUSABLE_SCHEMA",
+      "reasons": [
+        "file does not carry full OHLCV columns, so neither range-based features nor tradability can be assessed"
+      ]
+    },
+    {
+      "file": "data/raw/MES/MESZ6_15min_20260727_20260911.csv",
+      "consumed_by_scripts": [
+        "run_h017_ma_threshold_backtest.py",
+        "run_orb_backtests.py"
+      ],
+      "n_bars": 1000,
+      "flat_bars": 5,
+      "flat_bar_rate": 0.005,
+      "zero_volume_bars": 2,
+      "zero_volume_rate": 0.002,
+      "median_volume": 45.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "median volume is 45, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "15min",
+      "sample_years": 0.153,
+      "minimum_detectable_sharpe_t2": 5.12
+    },
+    {
+      "file": "data/raw/MES/MESZ6_1day_20250922_20260911.csv",
+      "consumed_by_scripts": [
+        "run_crypto_lead_lag.py",
+        "run_h009_hac_recheck.py",
+        "run_h010_h011_backtests.py",
+        "run_h015_volume_shock_backtest.py",
+        "run_h016_macd_swing_breakout_backtest.py",
+        "run_h017_ma_threshold_backtest.py",
+        "run_multi_horizon_trend_backtests.py",
+        "run_session_decomposition_backtests.py",
+        "run_vol_scaled_and_portfolio_backtests.py"
+      ],
+      "n_bars": 245,
+      "flat_bars": 85,
+      "flat_bar_rate": 0.3469,
+      "zero_volume_bars": 85,
+      "zero_volume_rate": 0.3469,
+      "median_volume": 6.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "34.7% of bars are flat (open==high==low==close), above the 10% reject threshold -- these are settlement/indicative marks, not traded bars; every range-based feature computed on them is degenerate",
+        "34.7% of bars have zero volume, above the 10% warn threshold",
+        "median volume is 6, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 0.972,
+      "minimum_detectable_sharpe_t2": 2.03
+    },
+    {
+      "file": "data/raw/MES/MESZ6_30min_20260608_20260911.csv",
+      "consumed_by_scripts": [
+        "run_h017_ma_threshold_backtest.py",
+        "run_orb_backtests.py"
+      ],
+      "n_bars": 1000,
+      "flat_bars": 9,
+      "flat_bar_rate": 0.009,
+      "zero_volume_bars": 4,
+      "zero_volume_rate": 0.004,
+      "median_volume": 76.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "median volume is 76, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "30min",
+      "sample_years": 0.305,
+      "minimum_detectable_sharpe_t2": 3.62
+    },
+    {
+      "file": "data/raw/MES/MESZ6_5min_20260826_20260911.csv",
+      "consumed_by_scripts": [],
+      "n_bars": 1000,
+      "flat_bars": 43,
+      "flat_bar_rate": 0.043,
+      "zero_volume_bars": 12,
+      "zero_volume_rate": 0.012,
+      "median_volume": 25.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "4.3% of bars are flat (open==high==low==close), above the 2% warn threshold",
+        "median volume is 25, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "5min",
+      "sample_years": 0.051,
+      "minimum_detectable_sharpe_t2": 8.87
+    },
+    {
+      "file": "data/raw/MGC/MGCV6_15min_20260727_20260911.csv",
+      "consumed_by_scripts": [
+        "run_h017_ma_threshold_backtest.py",
+        "run_orb_backtests.py"
+      ],
+      "n_bars": 1000,
+      "flat_bars": 0,
+      "flat_bar_rate": 0.0,
+      "zero_volume_bars": 0,
+      "zero_volume_rate": 0.0,
+      "median_volume": 369.0,
+      "verdict": "TRADABLE",
+      "reasons": [],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "15min",
+      "sample_years": 0.153,
+      "minimum_detectable_sharpe_t2": 5.12
+    },
+    {
+      "file": "data/raw/MGC/MGCV6_15min_20260828_20260914_outsideRTH.csv",
+      "consumed_by_scripts": [],
+      "n_bars": 1000,
+      "flat_bars": 0,
+      "flat_bar_rate": 0.0,
+      "zero_volume_bars": 0,
+      "zero_volume_rate": 0.0,
+      "median_volume": 309.0,
+      "verdict": "TRADABLE",
+      "reasons": [],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "15min",
+      "sample_years": 0.153,
+      "minimum_detectable_sharpe_t2": 5.12
+    },
+    {
+      "file": "data/raw/MGC/MGCV6_1day_20241128_20260911.csv",
+      "consumed_by_scripts": [
+        "run_crypto_lead_lag.py",
+        "run_h009_hac_recheck.py",
+        "run_h010_h011_backtests.py",
+        "run_h015_volume_shock_backtest.py",
+        "run_h016_macd_swing_breakout_backtest.py",
+        "run_h017_ma_threshold_backtest.py",
+        "run_multi_horizon_trend_backtests.py",
+        "run_session_decomposition_backtests.py",
+        "run_vol_scaled_and_portfolio_backtests.py"
+      ],
+      "n_bars": 448,
+      "flat_bars": 188,
+      "flat_bar_rate": 0.4196,
+      "zero_volume_bars": 188,
+      "zero_volume_rate": 0.4196,
+      "median_volume": 6.0,
+      "verdict": "NOT_TRADABLE",
+      "reasons": [
+        "42.0% of bars are flat (open==high==low==close), above the 10% reject threshold -- these are settlement/indicative marks, not traded bars; every range-based feature computed on them is degenerate",
+        "42.0% of bars have zero volume, above the 10% warn threshold",
+        "median volume is 6, below the minimum 100 -- a backtest fill simulated against this series assumes liquidity that was not there"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 1.778,
+      "minimum_detectable_sharpe_t2": 1.5
+    },
+    {
+      "file": "data/raw/MGC/MGCV6_30min_20260608_20260911.csv",
+      "consumed_by_scripts": [
+        "run_h017_ma_threshold_backtest.py",
+        "run_orb_backtests.py"
+      ],
+      "n_bars": 1000,
+      "flat_bars": 0,
+      "flat_bar_rate": 0.0,
+      "zero_volume_bars": 0,
+      "zero_volume_rate": 0.0,
+      "median_volume": 243.0,
+      "verdict": "TRADABLE",
+      "reasons": [],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "30min",
+      "sample_years": 0.305,
+      "minimum_detectable_sharpe_t2": 3.62
+    },
+    {
+      "file": "data/raw/SPY/SPY_1day_20250902_20260914.csv",
+      "consumed_by_scripts": [
+        "run_h017_etf_extension.py"
+      ],
+      "n_bars": 260,
+      "flat_bars": 0,
+      "flat_bar_rate": 0.0,
+      "zero_volume_bars": 260,
+      "zero_volume_rate": 1.0,
+      "median_volume": 0.0,
+      "verdict": "DEGRADED",
+      "reasons": [
+        "volume is zero on every bar while bars carry genuine high-low ranges: the feed does not populate volume for this instrument, so liquidity cannot be assessed from this series (prices themselves look traded)"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 1.032,
+      "minimum_detectable_sharpe_t2": 1.97
+    },
+    {
+      "file": "data/raw/USO/USO_1day_20250902_20260914.csv",
+      "consumed_by_scripts": [
+        "run_h017_etf_extension.py"
+      ],
+      "n_bars": 260,
+      "flat_bars": 0,
+      "flat_bar_rate": 0.0,
+      "zero_volume_bars": 260,
+      "zero_volume_rate": 1.0,
+      "median_volume": 0.0,
+      "verdict": "DEGRADED",
+      "reasons": [
+        "volume is zero on every bar while bars carry genuine high-low ranges: the feed does not populate volume for this instrument, so liquidity cannot be assessed from this series (prices themselves look traded)"
+      ],
+      "thresholds": {
+        "flat_bar_reject_rate": 0.1,
+        "flat_bar_warn_rate": 0.02,
+        "zero_volume_reject_rate": 0.5,
+        "zero_volume_warn_rate": 0.1,
+        "min_median_volume": 100.0
+      },
+      "timeframe": "1day",
+      "sample_years": 1.032,
+      "minimum_detectable_sharpe_t2": 1.97
+    }
+  ]
+}
